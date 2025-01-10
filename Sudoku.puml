@@ -1,0 +1,29 @@
+@startuml
+skinparam classAttributeIconSize 0
+'https://plantuml.com/class-diagram
+
+class Main{
+    + {static} main(args : String[]) : void
+}
+
+abstract class SudokuGrid{
+    # size : int
+    # grid : int[][]
+
+    + SudokuGrid(size : int)
+    + {abstract} isValid(row : int, col : int, value : int) : boolean
+    + {abstract} solve() : boolean
+    + display() : void
+    + setValue(row : int, col : int, value : int) : void
+    + getValue(row : int, col : int) : int
+}
+
+class ClassicSudokuGrid{
+    + ClassicSudokuGrid()
+    + isValid(row : int, col : int, value : int) : boolean
+    + solve() : boolean
+}
+
+SudokuGrid <|-- ClassicSudokuGrid
+
+@enduml
