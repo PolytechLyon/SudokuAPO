@@ -1,0 +1,139 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+'-----------------------------------------
+' Core Classes
+'-----------------------------------------
+abstract class Grid {
+    - size: int
+    - regions: List<Region>
+    - cells: List<Cell>
+    + isValid(value: int, row: int, col: int): boolean
+    + display(): void
+    + loadFromFile(path: String): void
+}
+
+class ClassicSudokuGrid {
+    + ClassicSudokuGrid()
+}
+
+class MultidokuGrid {
+    - subGrids: List<ClassicSudokuGrid>
+    - sharedCells: List<Cell>
+    + addSharedCell(cell: Cell): void
+}
+
+class Region {
+    - id: String
+    - cells: List<Cell>
+    - type: RegionType {Square, Colored, Irregular}
+    + validateUniqueness(): boolean
+    + validateConnectivity(): boolean
+}
+
+class Cell {
+    - value: int
+    - x: int
+    - y: int
+    - isLocked: boolean
+    + getPossibleValues(): List<int>
+}
+
+'-----------------------------------------
+' Solving System
+'-----------------------------------------
+interface SolverStrategy {
+    + solve(grid: Grid): boolean
+    + getSteps(): List<String>
+}
+
+class RuleBasedSolver {
+    - rules: List<Rule>
+    + addRule(rule: Rule): void
+}
+
+class BacktrackingSolver {
+    - maxDepth: int
+}
+
+class HybridSolver {
+    - ruleSolver: RuleBasedSolver
+    - backtrackSolver: BacktrackingSolver
+}
+
+class Rule {
+    - difficultyLevel: Difficulty
+    + apply(grid: Grid): boolean
+}
+
+'-----------------------------------------
+' Generation System
+'-----------------------------------------
+class Generator {
+    - difficultyPresets: Map<Difficulty, int>
+    + generateCompleteGrid(): Grid
+    + createPuzzle(baseGrid: Grid, difficulty: Difficulty): Grid
+}
+
+enum Difficulty {
+    EASY,
+    MEDIUM,
+    HARD
+}
+
+'-----------------------------------------
+' I/O & Logging
+'-----------------------------------------
+class Menu {
+    - currentGrid: Grid
+    - solver: SolverStrategy
+    + showMainMenu(): void
+    + handleInput(): void
+}
+
+class Logger {
+    - steps: List<String>
+    + logStep(step: String): void
+    + exportLog(): void
+}
+
+class InputHandler {
+    + readGridFromConsole(): Grid
+    + readGridFromFile(path: String): Grid
+}
+
+class OutputHandler {
+    + displayGrid(grid: Grid): void
+    + highlightConflicts(conflicts: List<Cell>): void
+}
+
+'-----------------------------------------
+' Relationships
+'-----------------------------------------
+Grid <|-- ClassicSudokuGrid
+Grid <|-- MultidokuGrid
+Grid "1" *-- "1..*" Region
+Region "1" *-- "3..*" Cell
+
+SolverStrategy <|.. RuleBasedSolver
+SolverStrategy <|.. BacktrackingSolver
+SolverStrategy <|.. HybridSolver
+RuleBasedSolver "1" *-- "1..*" Rule
+
+MultidokuGrid "1" *-- "1..*" ClassicSudokuGrid
+MultidokuGrid "1" *-- "1..*" Cell : sharedCells
+
+Generator --> Grid : creates
+Generator --> Difficulty : uses
+
+Menu --> InputHandler
+Menu --> OutputHandler
+Menu --> SolverStrategy
+Menu --> Generator
+
+RuleBasedSolver --> Logger : logs steps
+BacktrackingSolver --> Logger : logs steps
+HybridSolver --> Logger : logs steps
+
+OutputHandler --> Grid : displays
+@enduml

@@ -1,0 +1,84 @@
+@startuml
+skinparam classAttributeIconSize 0
+'https://plantuml.com/class-diagram
+
+abstract class Grid{
+    - size : int
+     - regions: List<Region>
+
+    + SudokuGrid(size : int)
+    + {abstract} isValid(row : int, col : int, value : int) : boolean
+    + {abstract} solve() : boolean
+    + display() : void
+    + setValue(row : int, col : int, value : int) : void
+    + getValue(row : int, col : int) : int
+}
+
+class Region {
+    - id: String
+    - cells: List<Cell>
+    + addCell(cell: Cell)
+}
+
+class Cell {
+    -value : <E>
+    -x : int
+    -y : int
+    - linkedGrids: List<Grid>
+    +Cell(value,x,y)
+}
+
+class ClassicSudokuGrid{
+    + ClassicSudokuGrid()
+    + isValid(row : int, col : int, value : int) : boolean
+    + solve() : boolean
+}
+
+class MultidokuGrid{
+    - sharedCells: List<Cell>
+    + MultidokuGrid()
+    + addSharedCell(cell: Cell)
+    + isValid(row : int, col : int, value : int) : boolean
+    + solve() : boolean
+}
+
+class Solver {
+    - List<Rule> Rules
+    + AddRules()
+}
+
+abstract class Rule {
+    + applyRule(grid: Grid): boolean
+}
+class ExclusionDirecte extends Rule {
+    + applyRule(grid: Grid): boolean
+}
+class PairesExclusives extends Rule {
+    + applyRule(grid: Grid): boolean
+}
+class UniciteForcee extends Rule {
+    + applyRule(grid: Grid): boolean
+}
+
+
+class Generator {
+    + Generator()
+}
+
+class BackTracking {
+    +BackTracking()
+    +SolveGridBackTracking() : boolean
+}
+
+Grid <|-- MultidokuGrid
+Grid <|-- ClassicSudokuGrid
+MultidokuGrid o-- "1 à n" ClassicSudokuGrid
+Generator ..> Solver
+Solver ..> BackTracking
+MultidokuGrid <-- Solver
+Grid <-- Solver
+Solver o-- Rule
+Region *-- Cell
+Grid *-- Region
+
+@enduml

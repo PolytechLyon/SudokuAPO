@@ -1,6 +1,7 @@
 @startuml
 class Multidoku {
-    - Sudokus[] : SudokuGrid
+    - List<SudokuGrid> SudokuGrid
+    - List<SharedRegion> sharedRegions
 }
 class SudokuGrid{
 
@@ -12,7 +13,7 @@ class Bloc {
 }
 
 class Cell {
-    -value : int
+    -value : <E>
     + Cell(Value : int)
 }
 
@@ -29,7 +30,7 @@ class Contraintes {
 class Generator {
 }
 
-Multidoku*-- "1 à n" SudokuGrid
+Multidoku o-- "1 à n" SudokuGrid
 Solver*-- "1 à n" Contraintes
 SudokuGrid<--Solver
 SudokuGrid*-- "1 à n" Bloc
