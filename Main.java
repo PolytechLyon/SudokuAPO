@@ -1,35 +1,64 @@
-import java.util.*;
+import modele.GrilleSudoku;
+import solver.SolveurSudoku;
+import generator.GenerateurSudoku;
+import java.util.Scanner;
 
+/**
+ * Classe principale pour exécuter le programme Sudoku.
+ */
 public class Main {
     public static void main(String[] args) {
-        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        Scanner scanner = new Scanner(System.in);
+        int choix;
+        do {
+            System.out.println("Menu:");
+            System.out.println("1. Résoudre une grille de Sudoku");
+            System.out.println("2. Générer un puzzle de Sudoku");
+            System.out.println("3. Quitter");
+            System.out.print("Votre choix : ");
+            choix = scanner.nextInt();
 
-        // Création du Multidoku avec **deux grilles fusionnées par un bloc**
-        MultiDokuGrid<Integer> multidoku = new MultiDokuGrid<>(9);
+            switch (choix) {
+                case 1:
+                    // Résolution d'une grille de Sudoku saisie par l'utilisateur
+                    GrilleSudoku grille = new GrilleSudoku();
+                    System.out.println("Entrez les 9 lignes de la grille (0 pour vide) :");
+                    for (int i = 0; i < 9; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            grille.setCase(i, j, scanner.nextInt());
+                        }
+                    }
+                    System.out.println("Grille initiale :");
+                    grille.afficher();
 
-        // Définition d’un bloc 3x3 fusionné
-        multidoku.addSharedBlock(3, 3); // Bloc central des deux grilles
+                    SolveurSudoku solveur = new SolveurSudoku(9);
+                    if (solveur.resoudre(grille)) {
+                        System.out.println("Sudoku résolu :");
+                        grille.afficher();
+                    } else {
+                        System.out.println("Le Sudoku n'a pas de solution.");
+                    }
+                    break;
+                case 2:
+                    // Génération d'un puzzle de Sudoku
+                    GenerateurSudoku generateur = new GenerateurSudoku(9);
+                    GrilleSudoku grilleComplete = generateur.genererGrilleComplete();
+                    System.out.println("Grille complète générée :");
+                    grilleComplete.afficher();
+                    System.out.print("Nombre de cases à retirer pour créer le puzzle : ");
+                    int nbRetirer = scanner.nextInt();
+                    GrilleSudoku puzzle = generateur.genererPuzzle(nbRetirer);
+                    System.out.println("Puzzle généré :");
+                    puzzle.afficher();
+                    break;
+                case 3:
+                    System.out.println("Au revoir !");
+                    break;
+                default:
+                    System.out.println("Choix invalide.");
+            }
+        } while (choix != 3);
 
-        // Remplissage partiel des grilles
-        multidoku.grids.get(0).setValue(3, 3, 5);
-        multidoku.grids.get(0).setValue(3, 4, 3);
-        multidoku.grids.get(0).setValue(4, 3, 6);
-        multidoku.grids.get(0).setValue(4, 4, 7);
-
-        multidoku.grids.get(1).setValue(5, 3, 2);
-
-        multidoku.grids.get(0).setValue(4, 2, 10);
-
-
-        multidoku.grids.get(1).setValue(4, 8, 99);
-        multidoku.grids.get(0).setValue(4, 8, 66);
-
-
-
-        // Synchronisation des blocs fusionnés
-        multidoku.synchronizeSharedBlocks();
-
-        // Lancement de l'interface graphique
-        new MultiDokuGUI<>(multidoku);
+        scanner.close();
     }
 }
