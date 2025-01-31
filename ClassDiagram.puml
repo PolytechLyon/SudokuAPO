@@ -55,18 +55,27 @@ class UniciteForcee extends Rule {
     + applyRule(grid: Grid): boolean
 }
 
+enum Difficulte{
+    FACILE
+    MOYEN
+    DIFFICILE
+}
+
+Generator --> Difficulte
 
 class Generator {
     + Generator()
-    +GeneratePuzzle(Grid grid): Grid
+    +GeneratePuzzle(Grid grid, Difficulte difficulte): Grid
 }
 Generator ..> Grid
 
 class MenuTextuel {
     +LoadGrid(Grid (grid: Grid)
-    +ChoisirMethodeResolution()
+    +ChoisirMethodeResolution(grid: Grid, SolverStrategy method) : Grid
     +GenererGrille(Grid grid): Grid
 }
+
+MenuTextuel ..> SolverStrategy
 
 abstract class SolverStrategy {
     + solve(grid: Grid): boolean
@@ -98,6 +107,7 @@ abstract class SolverStrategy {
     - logger: Logger  ' Attribut commun à tous les solveurs
     + solve(grid: Grid): boolean
     + getSteps(): List<String>
+    + AfficherSudoku()
 }
 
 SolverStrategy --> Logger : utilise
