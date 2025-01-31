@@ -1,12 +1,43 @@
 @startuml
-skinparam classAttributeIconSize 0
-'https://plantuml.com/class-diagram
+class Multidoku {
+    - Sudokus[] : SudokuGrid
+}
+class SudokuGrid{
 
-class Main{
-    + {static} main(args : String[]) : void
 }
 
-abstract class SudokuGrid{
+class Bloc {
+    -taille : int
+    + Bloc(taille : int)
+}
+
+class Cell {
+    -value : int
+    + Cell(Value : int)
+}
+
+class Menu {
+    + générer() : void
+    + choisirDifficulte() : void
+}
+
+class Solver {
+}
+class Contraintes {
+}
+
+class Generator {
+}
+
+Multidoku*-- "1 à n" SudokuGrid
+Solver*-- "1 à n" Contraintes
+SudokuGrid<--Solver
+SudokuGrid*-- "1 à n" Bloc
+Bloc*-- "1 à n" Cell
+Generator ..> Solver
+BackTracking <|-- Solver
+@enduml
+
     # size : int
     # grid : int[][]
 
@@ -16,14 +47,3 @@ abstract class SudokuGrid{
     + display() : void
     + setValue(row : int, col : int, value : int) : void
     + getValue(row : int, col : int) : int
-}
-
-class ClassicSudokuGrid{
-    + ClassicSudokuGrid()
-    + isValid(row : int, col : int, value : int) : boolean
-    + solve() : boolean
-}
-
-SudokuGrid <|-- ClassicSudokuGrid
-
-@enduml
