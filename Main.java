@@ -1,25 +1,35 @@
-// Classe principale pour tester la grille de Sudoku
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
-        SudokuGrid sudoku = new ClassicSudokuGrid(); // Crée une grille classique 9x9
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-        // Exemple de remplissage partiel de la grille
-        sudoku.setValue(0, 0, 5);
-        sudoku.setValue(0, 1, 3);
-        sudoku.setValue(1, 0, 6);
-        sudoku.setValue(4, 4, 7);
-        sudoku.setValue(8, 8, 9);
+        // Création du Multidoku avec **deux grilles fusionnées par un bloc**
+        MultiDokuGrid<Integer> multidoku = new MultiDokuGrid<>(9);
 
-        // Affiche la grille avant résolution
-        System.out.println("Grille avant résolution :");
-        sudoku.display();
+        // Définition d’un bloc 3x3 fusionné
+        multidoku.addSharedBlock(3, 3); // Bloc central des deux grilles
 
-        // Résout la grille et affiche le résultat
-        if (sudoku.solve()) {
-            System.out.println("Grille après résolution :");
-            sudoku.display();
-        } else {
-            System.out.println("Impossible de résoudre la grille !");
-        }
+        // Remplissage partiel des grilles
+        multidoku.grids.get(0).setValue(3, 3, 5);
+        multidoku.grids.get(0).setValue(3, 4, 3);
+        multidoku.grids.get(0).setValue(4, 3, 6);
+        multidoku.grids.get(0).setValue(4, 4, 7);
+
+        multidoku.grids.get(1).setValue(5, 3, 2);
+
+        multidoku.grids.get(0).setValue(4, 2, 10);
+
+
+        multidoku.grids.get(1).setValue(4, 8, 99);
+        multidoku.grids.get(0).setValue(4, 8, 66);
+
+
+
+        // Synchronisation des blocs fusionnés
+        multidoku.synchronizeSharedBlocks();
+
+        // Lancement de l'interface graphique
+        new MultiDokuGUI<>(multidoku);
     }
 }

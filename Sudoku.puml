@@ -1,29 +1,57 @@
 @startuml
 skinparam classAttributeIconSize 0
-'https://plantuml.com/class-diagram
 
-class Main{
+'----------------------- CLASSE DE BASE POUR LA GRILLE -----------------------
+abstract class SudokuGrid<T> {
+    # size : int
+    # grid : T[][]
+
+    + SudokuGrid(size : int)
+    + {abstract} isValid(row : int, col : int, value : T) : boolean
+    + display() : void
+    + setValue(row : int, col : int, value : T) : void
+    + getValue(row : int, col : int) : T
+}
+
+class ClassicSudokuGrid<T> {
+    + ClassicSudokuGrid()
+    + isValid(row : int, col : int, value : T) : boolean
+}
+
+'----------------------- SOLVER & GENERATOR -----------------------
+class SudokuSolver<T> {
+    + solve(grid : SudokuGrid<T>, possibleValues : List<T>) : boolean
+}
+
+class SudokuGenerator<T> {
+    + generate(grid : SudokuGrid<T>, possibleValues : List<T>, filledCells : int) : void
+}
+
+'----------------------- GESTION DU PROJET -----------------------
+class SudokuManager<T> {
+    - grid : SudokuGrid<T>
+    - solver : SudokuSolver<T>
+    - generator : SudokuGenerator<T>
+    - possibleValues : List<T>
+
+    + SudokuManager(grid : SudokuGrid<T>, possibleValues : List<T>)
+    + run() : void
+}
+
+class Main {
     + {static} main(args : String[]) : void
 }
 
-abstract class SudokuGrid{
-    # size : int
-    # grid : int[][]
-
-    + SudokuGrid(size : int)
-    + {abstract} isValid(row : int, col : int, value : int) : boolean
-    + {abstract} solve() : boolean
-    + display() : void
-    + setValue(row : int, col : int, value : int) : void
-    + getValue(row : int, col : int) : int
-}
-
-class ClassicSudokuGrid{
-    + ClassicSudokuGrid()
-    + isValid(row : int, col : int, value : int) : boolean
-    + solve() : boolean
-}
-
+'----------------------- RELATIONS ENTRE CLASSES -----------------------
 SudokuGrid <|-- ClassicSudokuGrid
+
+SudokuSolver --> SudokuGrid
+SudokuGenerator --> SudokuGrid
+
+SudokuManager --> SudokuGrid
+SudokuManager --> SudokuSolver
+SudokuManager --> SudokuGenerator
+
+Main --> SudokuManager
 
 @enduml
