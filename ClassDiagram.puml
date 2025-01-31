@@ -4,14 +4,14 @@ skinparam classAttributeIconSize 0
 
 abstract class Grid{
     - size : int
-     - regions: List<Region>
-
+    - regions: List<Region>
     + SudokuGrid(size : int)
     + {abstract} isValid(row : int, col : int, value : int) : boolean
     + {abstract} solve() : boolean
     + display() : void
     + setValue(row : int, col : int, value : int) : void
     + getValue(row : int, col : int) : int
+    + getRegionsForCell(row: int, col: int): List<Region>
 }
 
 class Region {
@@ -42,11 +42,6 @@ class MultidokuGrid{
     + solve() : boolean
 }
 
-class Solver {
-    - List<Rule> Rules
-    + AddRules()
-}
-
 abstract class Rule {
     + applyRule(grid: Grid): boolean
 }
@@ -63,22 +58,69 @@ class UniciteForcee extends Rule {
 
 class Generator {
     + Generator()
+    +GeneratePuzzle(Grid grid): Grid
+}
+Generator ..> Grid
+
+class MenuTextuel {
+    +LoadGrid(Grid (grid: Grid)
+    +ChoisirMethodeResolution()
+    +GenererGrille(Grid grid): Grid
 }
 
-class BackTracking {
-    +BackTracking()
-    +SolveGridBackTracking() : boolean
+abstract class SolverStrategy {
+    + solve(grid: Grid): boolean
+    + getSteps(): List<String>
 }
+
+class RuleBasedSolver {
+    - rules: List<Rule>
+    + addRule(rule: Rule): void
+}
+
+class BacktrackingSolver {
+    - maxDepth: int
+}
+
+class HybridSolver {
+    - ruleSolver: RuleBasedSolver
+    - backtrackSolver: BacktrackingSolver
+}
+
+class Logger {
+    - logs: List<String>
+    + log(step: String): void
+    + exportLogs(): void
+    + clearLogs(): void
+}
+
+abstract class SolverStrategy {
+    - logger: Logger  ' Attribut commun à tous les solveurs
+    + solve(grid: Grid): boolean
+    + getSteps(): List<String>
+}
+
+SolverStrategy --> Logger : utilise
+
+Generator<--MenuTextuel
 
 Grid <|-- MultidokuGrid
 Grid <|-- ClassicSudokuGrid
-MultidokuGrid o-- "1 à n" ClassicSudokuGrid
-Generator ..> Solver
-Solver ..> BackTracking
-MultidokuGrid <-- Solver
-Grid <-- Solver
-Solver o-- Rule
-Region *-- Cell
 Grid *-- Region
+Grid <-- SolverStrategy
+
+Generator ..> SolverStrategy
+
+MultidokuGrid <-- SolverStrategy
+MultidokuGrid o-- "1 à n" ClassicSudokuGrid
+
+Region *-- Cell
+
+SolverStrategy <|-- RuleBasedSolver
+SolverStrategy <|-- HybridSolver
+SolverStrategy <|-- BacktrackingSolver
+RuleBasedSolver "1" *-- "1..*" Rule
+
+
 
 @enduml
