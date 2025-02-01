@@ -2,6 +2,7 @@ package src.mypackage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class Cell<E> {
@@ -9,6 +10,8 @@ public class Cell<E> {
     private int y; // Position en y (ligne)
     private int x; // Position en x (colonne)
     private List<Grid> linkedGrids; // Liste des grilles auxquelles cette cellule est liée
+    private Set<E> possibleValues; // Ensemble des valeurs possibles pour cette cellule
+
 
     // Constructeur
     public Cell(E value, int y, int x) {
@@ -41,6 +44,18 @@ public class Cell<E> {
 
     public void addLinkedGrid(Grid grid) {
         this.linkedGrids.add(grid);
+    }
+
+    public Set<E> getPossibleValues() {
+        return possibleValues;
+    }
+
+    public void setPossibleValues(Set<E> possibleValues) {
+        this.possibleValues = possibleValues;
+    }
+
+    public void removePossibleValue(E value) {
+        this.possibleValues.remove(value);
     }
 
     @Override
