@@ -6,11 +6,11 @@ abstract class Grid{
     - size : int
     - regions: List<Region>
     + Grid(size : int, regions: List<Region>)
-    + {abstract} isValid(row : int, col : int, value : int) : boolean
+    + {abstract} isValid(row : int, col : int, value : <E>) : boolean
     + {abstract} solve() : boolean
     + display() : void
-    + setValue(row : int, col : int, value : int) : void
-    + getValue(row : int, col : int) : int
+    + setValue(row : int, col : int, value : <E>) : void
+    + getValue(row : int, col : int) : <E>
     + getRegionsForCell(row: int, col: int): List<Region>
     + DisplayGrid()
 }
@@ -32,7 +32,7 @@ class Cell {
 
 class ClassicSudokuGrid{
     + ClassicSudokuGrid()
-    + isValid(row : int, col : int, value : int) : boolean
+    + isValid(row : int, col : int, value : <E>) : boolean
     + solve() : boolean
 }
 
@@ -40,7 +40,7 @@ class MultidokuGrid{
     - sharedCells: List<Cell>
     + MultidokuGrid()
     + addSharedCell(cell: Cell)
-    + isValid(row : int, col : int, value : int) : boolean
+    + isValid(row : int, col : int, value : <E>) : boolean
     + solve() : boolean
 }
 
@@ -65,12 +65,19 @@ enum Difficulte{
 
 Generator --> Difficulte
 
-class Generator {
+Abstract class Generator {
     Difficulte difficulte
-    + Generator(Difficulte difficulte)
+    + Generator(Difficulte ChoixDifficulte)
     +GeneratePuzzle(Grid grid, Difficulte difficulte): Grid
 }
 Generator ..> Grid
+
+class GenerateFromComputer extends Generator{
+}
+
+class GenerateFromUser extends Generator{
+    + getUserInput(): Grid
+}
 
 class MenuTextuel {
     - solver: SolverStrategy
@@ -82,6 +89,8 @@ class MenuTextuel {
 }
 
 MenuTextuel ..> SolverStrategy
+
+
 
 class RuleBasedSolver {
     - rules: List<Rule>
@@ -120,7 +129,7 @@ Grid <|-- ClassicSudokuGrid
 Grid *-- Region
 Grid <-- SolverStrategy
 
-Generator ..> SolverStrategy
+GenerateFromComputer ..> SolverStrategy
 
 MultidokuGrid o-- "1 à n" ClassicSudokuGrid
 
