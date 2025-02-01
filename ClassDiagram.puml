@@ -5,6 +5,7 @@ skinparam classAttributeIconSize 0
 abstract class Grid{
     - size : int
     - regions: List<Region>
+    + Grid(size : int, regions: List<Region>)
     + SudokuGrid(size : int)
     + {abstract} isValid(row : int, col : int, value : int) : boolean
     + {abstract} solve() : boolean
@@ -12,11 +13,13 @@ abstract class Grid{
     + setValue(row : int, col : int, value : int) : void
     + getValue(row : int, col : int) : int
     + getRegionsForCell(row: int, col: int): List<Region>
+    + DisplayGrid()
 }
 
 class Region {
     - id: String
     - cells: List<Cell>
+    +Region(cell: List<Cell>)
     + addCell(cell: Cell)
 }
 
@@ -64,23 +67,22 @@ enum Difficulte{
 Generator --> Difficulte
 
 class Generator {
-    + Generator()
+    Difficulte difficulte
+    + Generator(Difficulte difficulte)
     +GeneratePuzzle(Grid grid, Difficulte difficulte): Grid
 }
 Generator ..> Grid
 
 class MenuTextuel {
-    +LoadGrid(Grid (grid: Grid)
-    +ChoisirMethodeResolution(grid: Grid, SolverStrategy method) : Grid
-    +GenererGrille(Grid grid): Grid
+    - solver: SolverStrategy
+    + setSolver(SolverStrategy solver): void
+    +LoadGrid(grid: Grid)
+    +ChoisirMethodeResolution(grid: Grid, SolverStrategy method, AfficherLogs : boolean) : Grid
+    +GenererGrille(Grid grid, Difficulte difficulteChoisie): Grid
+    +LoadMenuTextuel()
 }
 
 MenuTextuel ..> SolverStrategy
-
-abstract class SolverStrategy {
-    + solve(grid: Grid): boolean
-    + getSteps(): List<String>
-}
 
 class RuleBasedSolver {
     - rules: List<Rule>
@@ -88,7 +90,7 @@ class RuleBasedSolver {
 }
 
 class BacktrackingSolver {
-    - maxDepth: int
+    +findEmptyCell()
 }
 
 class HybridSolver {
@@ -104,10 +106,10 @@ class Logger {
 }
 
 abstract class SolverStrategy {
-    - logger: Logger  ' Attribut commun à tous les solveurs
-    + solve(grid: Grid): boolean
+    - logger: Logger
+    SolverStrategy(logger: Logger)
+    + solve(grid: Grid, AfficherLogs: boolean): boolean
     + getSteps(): List<String>
-    + AfficherSudoku()
 }
 
 SolverStrategy --> Logger : utilise
@@ -121,7 +123,6 @@ Grid <-- SolverStrategy
 
 Generator ..> SolverStrategy
 
-MultidokuGrid <-- SolverStrategy
 MultidokuGrid o-- "1 à n" ClassicSudokuGrid
 
 Region *-- Cell
@@ -130,6 +131,7 @@ SolverStrategy <|-- RuleBasedSolver
 SolverStrategy <|-- HybridSolver
 SolverStrategy <|-- BacktrackingSolver
 RuleBasedSolver "1" *-- "1..*" Rule
+HybridSolver --> RuleBasedSolver
 
 
 
