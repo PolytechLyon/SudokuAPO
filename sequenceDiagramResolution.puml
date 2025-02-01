@@ -1,0 +1,6 @@
+@startuml
+actor User
+user->m1MenuTextuel : LoadGrid(Grid)
+m1MenuTextuel->SolverStrategy
+
+@enduml
