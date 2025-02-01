@@ -6,7 +6,6 @@ abstract class Grid{
     - size : int
     - regions: List<Region>
     + Grid(size : int, regions: List<Region>)
-    + SudokuGrid(size : int)
     + {abstract} isValid(row : int, col : int, value : int) : boolean
     + {abstract} solve() : boolean
     + display() : void
