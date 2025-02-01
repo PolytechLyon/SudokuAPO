@@ -70,18 +70,27 @@ public class ClassicSudokuGrid extends Grid {
         return null;
     }
 
-    // Définir une valeur dans la grille
     @Override
-    public <E> void setValue(int y, int x, E value) {
-        for (Region region : regions) {
-            for (Cell<?> cell : region.getCells()) {
-                if (cell.getX() == x && cell.getY() == y) {
-                    @SuppressWarnings("unchecked")
-                    Cell<E> typedCell = (Cell<E>) cell;
-                    typedCell.setValue(value);
-                    return;
+    public <E> void setValue(int row, int col, E value) {
+        if (!(value instanceof Integer)) {
+            System.out.println("❌ Erreur : Valeur non entière !");
+            return;
+        }
+
+        if (isValid(row, col, value)) {
+            for (Region region : regions) {
+                for (Cell<?> cell : region.getCells()) {
+                    if (cell.getX() == col && cell.getY() == row) {
+                        @SuppressWarnings("unchecked")
+                        Cell<Integer> typedCell = (Cell<Integer>) cell;
+                        typedCell.setValue((Integer) value);
+                        return;
+                    }
                 }
             }
+        } else {
+            System.out.println("❌ Impossible d'ajouter " + value + " en (" + row + ", " + col + ")");
         }
     }
+
 }

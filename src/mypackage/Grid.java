@@ -60,4 +60,23 @@ public abstract class Grid {
                 ", regions=" + regions +
                 '}';
     }
+
+    public void displayGrid() {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                Object value = getValue(y, x);
+                System.out.print((value != null ? value : ".") + " ");
+
+                if ((x + 1) % Math.sqrt(size) == 0 && x + 1 < size) {
+                    System.out.print("| "); // Séparation des régions verticales
+                }
+            }
+            System.out.println();
+
+            if ((y + 1) % Math.sqrt(size) == 0 && y + 1 < size) {
+                System.out.println("-".repeat(size * 2)); // Séparation des régions horizontales
+            }
+        }
+    }
+
 }
