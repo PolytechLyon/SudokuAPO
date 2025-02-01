@@ -1,6 +1,18 @@
 @startuml
 actor User
-user->m1MenuTextuel : LoadGrid(Grid)
-m1MenuTextuel->SolverStrategy
+
+User->"m1 : MenuTextuel" : LoadGridFromUserInputAndSolve(false)
+
+
+
+"m1 : MenuTextuel"->"gen1 : GenerateFromUser" : getUserInput() new grid1 Grid
+"gen1 : GenerateFromUser" -> "g1 : Grid" ** : create
+"gen1 : GenerateFromUser"<--"g1 : Grid" : g1 : Grid
+"gen1 : GenerateFromUser"-->"m1 : MenuTextuel" : g1 : Grid
+
+"m1 : MenuTextuel"->"b1 : BacktrackingSolver" : solve(g1, false)
+
+"m1 : MenuTextuel"<--"b1 : BacktrackingSolver" : g1 : Grid
+"m1 : MenuTextuel"->"g1 : Grid" : displayGrid(grid, false)
 
 @enduml

@@ -82,13 +82,13 @@ class GenerateFromUser extends Generator{
 class MenuTextuel {
     - solver: SolverStrategy
     + setSolver(SolverStrategy solver): void
-    +LoadGrid(grid: Grid)
+    +LoadGridFromUserInputAndSolve()
     +ChoisirMethodeResolution(grid: Grid, SolverStrategy method, AfficherLogs : boolean) : Grid
     +GenererGrille(Grid grid, Difficulte difficulteChoisie): Grid
     +LoadMenuTextuel()
 }
 
-MenuTextuel ..> SolverStrategy
+MenuTextuel --> SolverStrategy
 
 
 
