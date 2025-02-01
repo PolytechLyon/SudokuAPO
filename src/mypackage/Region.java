@@ -29,10 +29,10 @@ public class Region {
     }
 
     // Vérifier si une cellule avec des coordonnées spécifiques est dans la région
-    public boolean containsCell(int row, int col) {
-        // Vérifie chaque cellule de la région et compare les coordonnées (row, col)
+    public boolean containsCell(int y, int x) {
+        // Vérifie chaque cellule de la région et compare les coordonnées (y, x)
         for (Cell<?> cell : cells) {
-            if (cell.getX() == col && cell.getY() == row) {
+            if (cell.getY() == y && cell.getX() == x) {
                 return true; // La cellule fait partie de la région
             }
         }

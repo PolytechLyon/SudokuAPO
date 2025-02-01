@@ -6,15 +6,15 @@ import java.util.List;
 
 public class Cell<E> {
     private E value; // Valeur de la cellule (peut être un entier, un caractère, etc.)
-    private int x; // Position en x (colonne)
     private int y; // Position en y (ligne)
+    private int x; // Position en x (colonne)
     private List<Grid> linkedGrids; // Liste des grilles auxquelles cette cellule est liée
 
     // Constructeur
-    public Cell(E value, int x, int y) {
+    public Cell(E value, int y, int x) {
         this.value = value;
-        this.x = x;
         this.y = y;
+        this.x = x;
         this.linkedGrids = new ArrayList<>();
     }
 
@@ -27,12 +27,12 @@ public class Cell<E> {
         this.value = value;
     }
 
-    public int getX() {
-        return x; // Colonne
-    }
-
     public int getY() {
         return y; // Ligne
+    }
+
+    public int getX() {
+        return x; // Colonne
     }
 
     public List<Grid> getLinkedGrids() {

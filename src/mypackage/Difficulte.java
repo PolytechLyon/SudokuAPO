@@ -6,16 +6,12 @@ public enum Difficulte {
     HARD;    // Difficile
 
     public String getDescription() {
-        switch (this) {
-            case EASY:
-                return "Niveau facile";
-            case MEDIUM:
-                return "Niveau moyen";
-            case HARD:
-                return "Niveau difficile";
-            default:
-                return "Inconnu";
-        }
+        return switch (this) {
+            case EASY -> "Niveau facile";
+            case MEDIUM -> "Niveau moyen";
+            case HARD -> "Niveau difficile";
+            default -> "Inconnu";
+        };
     }
 }
 

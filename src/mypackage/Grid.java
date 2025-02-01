@@ -1,7 +1,9 @@
 package src.mypackage;
 
-import java.util.List;
+import src.mypackage.Region;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Grid {
     protected int size; // Taille de la grille
@@ -14,34 +16,24 @@ public abstract class Grid {
     }
 
     // Méthode abstraite pour valider une cellule (implémentée dans les sous-classes)
-    public abstract boolean isValid(int row, int col, int value);
+    public abstract <E> boolean isValid(int y, int x, E value);
 
-    // Méthode abstraite pour résoudre la grille (implémentée dans les sous-classes)
-    public abstract boolean solve();
+    // Obtenir la valeur d'une cellule dans la grille
+    public abstract <E> E getValue(int y, int x);
 
     // Méthode pour afficher la grille
     public void display() {
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                System.out.print(getValue(row, col) + " ");
-            }
-            System.out.println();
-        }
+        // A voir si on souhaite afficher quelque chose dans la classe mère ou si c'est spécifique aux sous-classes
     }
 
     // Définir la valeur dans la grille
-    public void setValue(int row, int col, int value) {
-        // Implémentation spécifique pour affecter la valeur à la position (row, col)
-    }
-
-    // Obtenir la valeur d'une cellule dans la grille
-    public abstract int getValue(int row, int col);
+    public abstract <E> void setValue(int y, int x, E value);
 
     // Récupérer les régions associées à une cellule
-    public List<Region> getRegionsForCell(int row, int col) {
+    public List<Region> getRegionsForCell(int y, int x) {
         List<Region> result = new ArrayList<>();
         for (Region region : regions) {
-            if (region.containsCell(row, col)) {
+            if (region.containsCell(y, x)) {
                 result.add(region);
             }
         }
