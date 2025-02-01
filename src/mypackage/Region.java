@@ -36,6 +36,16 @@ public class Region<E> {
                 ", cells=" + cells +
                 '}';
     }
+
+    public boolean containsCell(int row, int col) {
+        // Vérifie chaque cellule de la région et compare les coordonnées (row, col)
+        for (Cell<?> cell : cells) {
+            if (cell.getX() == col && cell.getY() == row) {
+                return true; // La cellule fait partie de la région
+            }
+        }
+        return false; // La cellule n'est pas dans la région
+    }
 }
 
 
