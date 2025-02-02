@@ -14,6 +14,7 @@ abstract class Grid{
     + addRegion()
     + getValuesForRow(y : int) : Set<E>
     + getSize() : int
+    + getValuesForColumn
     + setValue(row : int, col : int, value : <E>) : void
     + getValue(row : int, col : int) : <E>
     + getRegionsForCell(row: int, col: int): List<Region>
