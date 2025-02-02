@@ -51,6 +51,7 @@ public class SudokuModernGUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
+        // Panneau principal
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(darkTheme ? new Color(45, 45, 45) : Color.WHITE);
@@ -64,11 +65,12 @@ public class SudokuModernGUI extends JFrame {
                 JTextField tf = new JTextField();
                 tf.setHorizontalAlignment(JTextField.CENTER);
                 tf.setFont(new Font("SansSerif", Font.BOLD, 24));
-                int top = (i % 3 == 0) ? 3 : 1;
-                int left = (j % 3 == 0) ? 3 : 1;
-                int bottom = (i == GRID_SIZE - 1) ? 3 : 1;
-                int right = (j == GRID_SIZE - 1) ? 3 : 1;
-                tf.setBorder(new MatteBorder(top, left, bottom, right, Color.DARK_GRAY));
+                // Initialisation de la bordure (la couleur sera mise à jour dans updateTheme())
+                tf.setBorder(new MatteBorder( (i % 3 == 0) ? 3 : 1,
+                        (j % 3 == 0) ? 3 : 1,
+                        (i == GRID_SIZE - 1) ? 3 : 1,
+                        (j == GRID_SIZE - 1) ? 3 : 1,
+                        Color.DARK_GRAY));
                 cellFields[i][j] = tf;
                 gridPanel.add(tf);
             }
@@ -83,7 +85,7 @@ public class SudokuModernGUI extends JFrame {
         btnReset = new JButton("Reset");
         btnToggleTheme = new JButton("Dark Theme");
 
-        // Combobox pour choisir la méthode de résolution
+        // Combobox pour choisir la méthode de résolution (BackTrackingSolver et RuleBasedSolver)
         String[] solverOptions = { "BackTrackingSolver", "RuleBasedSolver" };
         solverCombo = new JComboBox<>(solverOptions);
         solverCombo.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -108,7 +110,6 @@ public class SudokuModernGUI extends JFrame {
                 SolverStrategy<Character> solver;
                 if ("RuleBasedSolver".equals(selected)) {
                     solver = new RuleBasedSolver<>(logger);
-                    // (Ajoutez ici, si besoin, l'ajout de règles spécifiques)
                 } else { // Par défaut, BackTrackingSolver
                     solver = new BackTrackingSolver<>(logger);
                 }
@@ -125,11 +126,12 @@ public class SudokuModernGUI extends JFrame {
         btnGenerate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int cellsToRemove = sliderDifficulty.getValue();
-                // Pour générer, on résout d'abord la grille complète en utilisant le BackTrackingSolver
+                int level = sliderDifficulty.getValue(); // 1: EASY, 2: MEDIUM, 3: HARD
+                // Pour la génération, on résout d'abord la grille complète en utilisant le BackTrackingSolver
                 BackTrackingSolver<Character> btSolver = new BackTrackingSolver<>(logger);
                 btSolver.solve(sudokuGrid, false);
-                // Retirer aléatoirement des cellules selon la difficulté
+                // En fonction du niveau, on retire un nombre de cellules prédéfini
+                int cellsToRemove = (level == 1) ? 30 : (level == 2) ? 40 : 50;
                 removeCells(cellsToRemove);
                 updateUIFromGrid();
             }
@@ -156,12 +158,13 @@ public class SudokuModernGUI extends JFrame {
         controlPanel = new JPanel();
         controlPanel.setBackground(mainPanel.getBackground());
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        sliderLabel = new JLabel("Difficulty (cells to remove):");
+        sliderLabel = new JLabel("Difficulty (1: EASY, 2: MEDIUM, 3: HARD):");
         sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         sliderLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        sliderDifficulty = new JSlider(JSlider.HORIZONTAL, 20, 60, 40);
-        sliderDifficulty.setMajorTickSpacing(5);
-        sliderDifficulty.setMinorTickSpacing(5);
+        // Limiter le slider aux valeurs 1, 2 et 3
+        sliderDifficulty = new JSlider(JSlider.HORIZONTAL, 1, 3, 2);
+        sliderDifficulty.setMajorTickSpacing(1);
+        sliderDifficulty.setMinorTickSpacing(1);
         sliderDifficulty.setSnapToTicks(true);
         sliderDifficulty.setPaintTicks(true);
         sliderDifficulty.setPaintLabels(true);
@@ -172,7 +175,7 @@ public class SudokuModernGUI extends JFrame {
         controlPanel.add(sliderLabel);
         controlPanel.add(sliderDifficulty);
 
-        // Regrouper boutons et contrôle dans un panneau bas
+        // Regrouper boutons et slider
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(mainPanel.getBackground());
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
@@ -193,7 +196,7 @@ public class SudokuModernGUI extends JFrame {
         btn.setFocusPainted(false);
     }
 
-    // Met à jour l'affichage de la grille dans le GUI en se basant sur sudokuGrid
+    // Met à jour l'affichage de la grille dans le GUI
     private void updateUIFromGrid() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
@@ -205,18 +208,28 @@ public class SudokuModernGUI extends JFrame {
 
     // Met à jour le thème clair/foncé pour tous les composants
     private void updateTheme() {
-        Color bg = darkTheme ? new Color(45,45,45) : Color.WHITE;
+        Color bg = darkTheme ? new Color(45, 45, 45) : Color.WHITE;
         Color fg = darkTheme ? Color.WHITE : Color.BLACK;
         getContentPane().setBackground(bg);
         gridPanel.setBackground(bg);
         buttonPanel.setBackground(bg);
         controlPanel.setBackground(bg);
+
+        // Mettre à jour les cellules et leurs bordures pour améliorer le contraste en thème foncé
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                cellFields[i][j].setBackground(darkTheme ? new Color(60,63,65) : Color.WHITE);
+                cellFields[i][j].setBackground(darkTheme ? new Color(60, 63, 65) : Color.WHITE);
                 cellFields[i][j].setForeground(fg);
+                // Redéfinir la bordure : si thème foncé, utiliser du blanc pour les séparateurs
+                int top = (i % 3 == 0) ? 3 : 1;
+                int left = (j % 3 == 0) ? 3 : 1;
+                int bottom = (i == GRID_SIZE - 1) ? 3 : 1;
+                int right = (j == GRID_SIZE - 1) ? 3 : 1;
+                Color borderColor = darkTheme ? Color.WHITE : Color.DARK_GRAY;
+                cellFields[i][j].setBorder(new MatteBorder(top, left, bottom, right, borderColor));
             }
         }
+
         sliderLabel.setForeground(fg);
         for (Component comp : buttonPanel.getComponents()) {
             if (comp instanceof JButton || comp instanceof JLabel) {
@@ -252,7 +265,7 @@ public class SudokuModernGUI extends JFrame {
         }
         @Override
         public void paintFocus(Graphics g) {
-            // Supprimer le focus
+            // Ne rien dessiner pour supprimer le focus
         }
         @Override
         public void paintTrack(Graphics g) {
