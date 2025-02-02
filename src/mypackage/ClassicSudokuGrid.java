@@ -8,7 +8,6 @@ public class ClassicSudokuGrid extends SudokuModulable {
     }
 
     // Surcharger displayGrid() pour un Sudoku 9x9
-    @Override
     public void displayGrid() {
         System.out.println("Affichage de la grille classique 9x9 :");
 

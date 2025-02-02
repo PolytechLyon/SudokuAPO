@@ -3,9 +3,10 @@ package src.mypackage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Region {
+
+public class Region<E> {
     private String id;
-    private List<Cell<?>> cells; // Liste de cellules, peut être de n'importe quel type
+    private List<Cell<E>> cells; // Liste de cellules génériques
 
     // Constructeur
     public Region(String id) {
@@ -14,36 +15,22 @@ public class Region {
     }
 
     // Ajouter une cellule à la région
-    public void addCell(Cell<?> cell) {
+    public void addCell(Cell<E> cell) {
         this.cells.add(cell);
     }
 
     // Obtenir toutes les cellules de la région
-    public List<Cell<?>> getCells() {
+    public List<Cell<E>> getCells() {
         return cells;
     }
 
-    // Getter pour l'identifiant de la région
-    public String getId() {
-        return id;
-    }
-
-    // Vérifier si une cellule avec des coordonnées spécifiques est dans la région
+    // Vérifier si une cellule appartient à la région
     public boolean containsCell(int y, int x) {
-        // Vérifie chaque cellule de la région et compare les coordonnées (y, x)
-        for (Cell<?> cell : cells) {
+        for (Cell<E> cell : cells) {
             if (cell.getY() == y && cell.getX() == x) {
-                return true; // La cellule fait partie de la région
+                return true;
             }
         }
-        return false; // La cellule n'est pas dans la région
-    }
-
-    @Override
-    public String toString() {
-        return "Region{" +
-                "id='" + id + '\'' +
-                ", cells=" + cells +
-                '}';
+        return false;
     }
 }
