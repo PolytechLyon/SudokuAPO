@@ -109,8 +109,6 @@ public class BackTrackingSolver<E> extends SolverStrategy<E> {
      * @return Nombre de solutions trouvées
      */
     public int countSolutions(Grid<E> grid, int solutionCount, int maxSolutions) {
-        if (solutionCount >= maxSolutions) return solutionCount; // ⚠️ Si on dépasse maxSolutions, inutile de continuer
-
         Cell<E> emptyCell = findEmptyCell(grid);
         if (emptyCell == null) return solutionCount + 1; // ✅ Une solution trouvée
 

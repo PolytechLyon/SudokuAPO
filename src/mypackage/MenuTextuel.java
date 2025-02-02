@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class MenuTextuel<E> {
     private SolverStrategy<E> solver;
-    private Grid<E> userGrid;
+    private ClassicSudokuGrid<E> userGrid;
 
     public MenuTextuel() {
         this.solver = null;
@@ -28,6 +28,7 @@ public class MenuTextuel<E> {
             System.out.println("3️⃣ - Résoudre la grille");
             System.out.println("4️⃣ - Afficher la grille");
             System.out.println("5️⃣ - Quitter");
+            System.out.println("6️⃣ - Générer une grille automatiquement");
             System.out.print("👉 Votre choix : ");
 
             int choix = scanner.nextInt();
@@ -50,6 +51,9 @@ public class MenuTextuel<E> {
                     System.out.println("👋 Au revoir !");
                     continuer = false;
                     break;
+                case 6:
+                    generateGridFromComputer();
+                    break;
                 default:
                     System.out.println("❌ Choix invalide, veuillez réessayer.");
             }
@@ -61,80 +65,73 @@ public class MenuTextuel<E> {
      * 📌 Charger une grille depuis l'input utilisateur et l'initialiser
      */
     public void LoadGridFromUserInputAndSolve() {
+        // 📌 Génération de la grille par l'utilisateur via `GenerateFromUser`
+        GenerateFromUser<E> generator = new GenerateFromUser<>(Difficulte.MOYEN);
+        ClassicSudokuGrid<E> userGrid = (ClassicSudokuGrid<E>) generator.generateUserGrid();
+
+        // 📌 6️⃣ Demander quel solveur utiliser
+        SolverStrategy<E> solver = chooseSolverFromUserInput();
+
+        // 📌 7️⃣ Résolution de la grille
+        System.out.println("🧩 Résolution en cours...");
+        if (solver.solve(userGrid, true)) {
+            System.out.println("✅ Grille résolue avec succès !");
+        } else {
+            System.out.println("❌ La grille ne peut pas être résolue !");
+        }
+
+        // 📌 8️⃣ Afficher la grille finale
+        userGrid.displayGrid();
+    }
+
+    public void generateGridFromComputer() {
         Scanner scanner = new Scanner(System.in);
 
-        // 📌 1️⃣ Demander la taille de la grille
+        // 📌 Demander la taille de la grille
         System.out.print("Entrez la taille de la grille (ex: 9 pour un Sudoku 9x9) : ");
         int size = scanner.nextInt();
         scanner.nextLine(); // Consommer le retour à la ligne
 
         // 📌 2️⃣ Demander les valeurs possibles
-        Set<String> possibleValues = new HashSet<>();
+        Set<E> possibleValues = new HashSet<>();
         System.out.print("Entrez les valeurs possibles séparées par des espaces (ex: 1 2 3 ... 9 ou A B C ... F) : ");
         String[] values = scanner.nextLine().split(" ");
 
-        // Ajouter directement les valeurs
+        // 📌 3️⃣ Ajouter les valeurs possibles
         for (String value : values) {
-            possibleValues.add(value);
+            possibleValues.add((E) value); // ⚠️ Supposition que l'entrée est correcte
         }
 
-        // 📌 3️⃣ Création de la grille modulable
-        ClassicSudokuGrid<String> userGrid = new ClassicSudokuGrid<>(size, possibleValues);
-        System.out.println("✅ Grille initialisée avec succès !");
+        // 📌 Demander la difficulté
+        System.out.println("Choisissez la difficulté :");
+        System.out.println("1️⃣ - Facile");
+        System.out.println("2️⃣ - Moyen");
+        System.out.println("3️⃣ - Difficile");
+        System.out.print("👉 Votre choix : ");
+        int choix = scanner.nextInt();
+        scanner.nextLine(); // Consommer la ligne restante
+
+        Difficulte difficulte;
+        switch (choix) {
+            case 1 -> difficulte = Difficulte.FACILE;
+            case 2 -> difficulte = Difficulte.MOYEN;
+            case 3 -> difficulte = Difficulte.DIFFICILE;
+            default -> {
+                System.out.println("❌ Choix invalide, sélection de la difficulté par défaut : Moyen");
+                difficulte = Difficulte.MOYEN;
+            }
+        }
+
+        // 📌 Génération de la grille
+        System.out.println("\n🔹 Génération d'une grille " + size + "x" + size + " en cours...");
+        GenerateFromComputer<E> generator = new GenerateFromComputer<>(difficulte);
+        userGrid = new ClassicSudokuGrid<>(size, possibleValues);
+        generator.GeneratePuzzle(userGrid, difficulte);
+
+        System.out.println("✅ Grille générée !");
         userGrid.displayGrid();
-
-        // 📌 4️⃣ Permettre à l'utilisateur d'ajouter des valeurs
-        while (true) {
-            System.out.print("\nEntrez une case à remplir (format: ligne colonne valeur), ou 'fin' pour arrêter : ");
-            String input = scanner.nextLine();
-
-            if (input.equalsIgnoreCase("fin")) {
-                break; // Arrêter la saisie
-            }
-
-            String[] parts = input.split(" ");
-            if (parts.length != 3) {
-                System.out.println("⚠️ Format invalide ! Essayez : ligne colonne valeur (ex: 0 0 5)");
-                continue;
-            }
-
-            try {
-                int row = Integer.parseInt(parts[0]);
-                int col = Integer.parseInt(parts[1]);
-                String value = parts[2];
-
-                if (!possibleValues.contains(value)) {
-                    System.out.println("❌ Valeur invalide ! Elle doit être parmi : " + possibleValues);
-                    continue;
-                }
-
-                userGrid.setValue(row, col, value);
-                userGrid.displayGrid();
-            } catch (NumberFormatException e) {
-                System.out.println("⚠️ Erreur : Ligne et colonne doivent être des nombres !");
-            }
-        }
-//
-//        // 📌 5️⃣ Résolution de la grille après la saisie
-//        if (solver == null) {
-//            System.out.println("⚠️ Aucun solveur sélectionné. Veuillez choisir un solveur.");
-//            solver = chooseSolverFromUserInput(); // 📌 L'utilisateur choisit un solveur
-//        }
-//
-//        System.out.println("🔄 Résolution de la grille...");
-//        boolean solved = solver.solve(userGrid, true);
-//
-//        if (solved) {
-//            System.out.println("✅ La grille a été résolue avec succès !");
-//        } else {
-//            System.out.println("❌ La grille ne peut pas être résolue !");
-//        }
-//
-//        // 📌 Afficher la grille après la résolution
-//        System.out.println("🧩 Grille après résolution :");
-//        userGrid.displayGrid();
-
     }
+
 
     /**
      * 🧠 Permet de choisir un solveur à appliquer sur la grille
@@ -187,6 +184,8 @@ public class MenuTextuel<E> {
         } else {
             System.out.println("❌ La grille ne peut pas être résolue !");
         }
+        userGrid.displayGrid();
+
     }
 
 

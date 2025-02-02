@@ -3,12 +3,18 @@ skinparam classAttributeIconSize 0
 'https://plantuml.com/class-diagram
 
 abstract class Grid{
-    - size : int
-    - regions: List<Region>
-    + Grid(size : int, regions: List<Region>)
+    # size : int
+    # regions: List<Region>
+    # cells : Cell<E>[ ][ ]
+    + Grid(size : int)
     + {abstract} isValid(row : int, col : int, value : <E>) : boolean
-    + {abstract} solve() : boolean
-    + display() : void
+    + {abstract} getValue() : E
+    + {abstract} setValue() : E
+    + getRegions() : List<Region<E>>
+    + addRegion()
+    + getValuesForRow(y : int) : Set<E>
+    + getSize() : int
+    + getValuesForColumn
     + setValue(row : int, col : int, value : <E>) : void
     + getValue(row : int, col : int) : <E>
     + getRegionsForCell(row: int, col: int): List<Region>
@@ -161,7 +167,7 @@ Grid <-- SolverStrategy
 
 GenerateFromComputer ..> SolverStrategy
 
-MultidokuGrid o-- "1 à n" ClassicSudokuGrid
+MultidokuGrid o-- "1 Ã  n" ClassicSudokuGrid
 
 Region *-- Cell
 

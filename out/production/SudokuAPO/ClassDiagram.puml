@@ -123,33 +123,6 @@ abstract class SolverStrategy {
     + getSteps(): List<String>
 }
 
-class MultidokuModernGUI {
-  - static final int GRID_SIZE : int
-  - sudokuGrid : ClassicSudokuGrid<Character>
-  - cellFields : JTextField[][]
-  - gridPanel : JPanel
-  - buttonPanel : JPanel
-  - controlPanel : JPanel
-  - sliderDifficulty : JSlider
-  - sliderLabel : JLabel
-  - btnSolve : JButton
-  - btnGenerate : JButton
-  - btnReset : JButton
-  - btnToggleTheme : JButton
-  - solverCombo : JComboBox<String>
-  - darkTheme : boolean
-  - logger : Logger
-  - possibleValues : Set<Character>
-  + MultidokuModernGUI()
-  - initializePossibleValues() : void
-  - initComponents() : void
-  - styleButton(btn : JButton, bgColor : Color) : void
-  - updateUIFromGrid() : void
-  - updateTheme() : void
-  - removeCells(count : int) : void
-  + main(args : String[]) : void
-}
-
 SolverStrategy --> Logger : utilise
 
 Generator<--MenuTextuel
