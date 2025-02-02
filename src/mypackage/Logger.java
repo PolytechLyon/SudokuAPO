@@ -28,8 +28,4 @@ public class Logger {
         }
     }
 
-    // Méthode pour effacer tous les logs
-    public void clearLogs() {
-        logs.clear();
-    }
 }

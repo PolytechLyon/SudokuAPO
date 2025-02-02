@@ -21,7 +21,7 @@ public class ExclusionDirecte<E> extends Rule<E> {
         return modified;
     }
 
-    private boolean exclusionRegion(Grid<E> grid) {
+    public boolean exclusionRegion(Grid<E> grid) {
         boolean modified = false;
         for (Region<E> region : grid.getRegions()) {
             Set<E> usedValues = new HashSet<>();
@@ -45,7 +45,7 @@ public class ExclusionDirecte<E> extends Rule<E> {
         return modified;
     }
 
-    private boolean exclusionLigne(Grid<E> grid) {
+    public boolean exclusionLigne(Grid<E> grid) {
         boolean modified = false;
         for (int y = 0; y < grid.getSize(); y++) {
             Set<E> usedValues = grid.getValuesForRow(y);
@@ -66,7 +66,7 @@ public class ExclusionDirecte<E> extends Rule<E> {
         return modified;
     }
 
-    private boolean exclusionColonne(Grid<E> grid) {
+    public boolean exclusionColonne(Grid<E> grid) {
         boolean modified = false;
         for (int x = 0; x < grid.getSize(); x++) {
             Set<E> usedValues = grid.getValuesForColumn(x);
