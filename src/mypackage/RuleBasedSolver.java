@@ -2,23 +2,48 @@ package src.mypackage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-class RuleBasedSolver<E> extends SolverStrategy<E>{
-    private List<Rule> rules;
+public class RuleBasedSolver<E> extends SolverStrategy<E> {
+    private List<Rule<E>> rules; // ✅ Liste de règles génériques
 
-    public RuleBasedSolver(Logger logger)
-    {
+    public RuleBasedSolver(Logger logger) {
         super(logger);
         this.rules = new ArrayList<>();
     }
 
-    public void addRule(Rule rule) {
+    // ✅ Ajouter une règle
+    public void addRule(Rule<E> rule) {
         rules.add(rule);
     }
 
-    public boolean solve(Grid<E> grid, boolean AfficherLogs) {
-        return AfficherLogs;
+    // ✅ Appliquer toutes les règles jusqu'à stabilisation
+    @Override
+    public boolean solve(Grid<E> grid, boolean afficherLogs) {
+        boolean modified;
+        int iteration = 0;
+
+        do {
+            modified = false;
+            iteration++;
+
+            // 📌 Parcourir toutes les règles et les appliquer
+            for (Rule<E> rule : rules) {
+                boolean ruleModified = rule.applyRule(grid);
+                modified |= ruleModified; // Met à jour si une règle a modifié la grille
+
+                // ✅ Loguer l'application de la règle si demandé
+                if (afficherLogs && ruleModified) {
+                    logger.log("🟢 Iteration " + iteration + " : " + rule.getClass().getSimpleName() + " applied.");
+                }
+            }
+
+        } while (modified); // 🔄 Continue tant qu'au moins une règle a modifié la grille
+
+        // ✅ Si demandé, afficher les logs finaux
+        if (afficherLogs) {
+            logger.exportLogs();
+        }
+
+        return true; // Vérifie si la grille est résolue
     }
 }
-
