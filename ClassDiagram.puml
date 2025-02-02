@@ -120,7 +120,7 @@ class MenuTextuel<E> {
     + afficherMenuTextuel()
     + LoadGridFromUserInputAndSolve()
     + generateGridFromComputer()
-    + chooseSolverFromUserInput : SolverStrategy<E>
+    + chooseSolverFromUserInput() : SolverStrategy<E>
     + solveGrid()
 }
 
