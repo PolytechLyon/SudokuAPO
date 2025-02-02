@@ -36,7 +36,6 @@ public class ClassicSudokuGrid<E> extends Grid<E> {
 
     @Override
     public boolean isValid(int y, int x, E value) {
-        if (value == null) return false;
 
         // ✅ Vérifier si la valeur est déjà présente dans la même ligne
         if (getValuesForRow(y).contains(value)) {
