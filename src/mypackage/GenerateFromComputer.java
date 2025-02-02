@@ -26,7 +26,7 @@ public class GenerateFromComputer<E> extends Generator<E> {
     /**
      * Vérifie si la grille est vide (aucune valeur assignée).
      */
-    private boolean isGridEmpty(Grid<E> grid) {
+    public boolean isGridEmpty(Grid<E> grid) {
         for (int y = 0; y < grid.getSize(); y++) {
             for (int x = 0; x < grid.getSize(); x++) {
                 if (grid.getValue(y, x) != null) {
@@ -40,7 +40,7 @@ public class GenerateFromComputer<E> extends Generator<E> {
     /**
      * Génère une grille complètement remplie et valide en utilisant le backtracking.
      */
-    private void generateSolvedGrid(Grid<E> grid) {
+    public void generateSolvedGrid(Grid<E> grid) {
         BackTrackingSolver<E> backtrackingSolver = new BackTrackingSolver<>(new Logger());
         backtrackingSolver.solve(grid, false);
     }
@@ -48,7 +48,7 @@ public class GenerateFromComputer<E> extends Generator<E> {
     /**
      * Supprime des cellules tout en garantissant une solution unique.
      */
-    private void makeGridPlayable(Grid<E> grid, Difficulte difficulte) {
+    public void makeGridPlayable(Grid<E> grid, Difficulte difficulte) {
         int numberOfCellsToRemove = calculateCellsToRemove(difficulte);
         List<Cell<E>> cellsToRemove = getShuffledCells(grid);
 
@@ -74,7 +74,7 @@ public class GenerateFromComputer<E> extends Generator<E> {
     /**
      * Vérifie si la grille possède une solution unique après suppression des valeurs.
      */
-    private boolean hasUniqueSolution(Grid<E> grid) {
+    public boolean hasUniqueSolution(Grid<E> grid) {
         BackTrackingSolver<E> solver = new BackTrackingSolver<>(new Logger());
         return solver.countSolutions(grid, 0, 2) == 1;
     }
@@ -82,7 +82,7 @@ public class GenerateFromComputer<E> extends Generator<E> {
     /**
      * Récupère et mélange les cellules de la grille pour varier les suppressions.
      */
-    private List<Cell<E>> getShuffledCells(Grid<E> grid) {
+    public List<Cell<E>> getShuffledCells(Grid<E> grid) {
         List<Cell<E>> cells = new ArrayList<>();
         for (int y = 0; y < grid.getSize(); y++) {
             for (int x = 0; x < grid.getSize(); x++) {
@@ -96,7 +96,7 @@ public class GenerateFromComputer<E> extends Generator<E> {
     /**
      * Définit le nombre de cellules à supprimer en fonction de la difficulté.
      */
-    private int calculateCellsToRemove(Difficulte difficulte) {
+    public int calculateCellsToRemove(Difficulte difficulte) {
         return switch (difficulte) {
             case FACILE -> 20;
             case MOYEN -> 40;

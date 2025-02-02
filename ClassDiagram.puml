@@ -42,10 +42,13 @@ class Cell<E> {
     +toString() : String
 }
 
-class ClassicSudokuGrid{
-    + ClassicSudokuGrid()
-    + isValid(row : int, col : int, value : <E>) : boolean
-    + solve() : boolean
+class ClassicSudokuGrid<E> {
+    + ClassicSudokuGrid(size: int, possibleValues: Set<E>)
+    + initializeRegions(): void
+    + isValid(y: int, x: int, value: E): boolean
+    + getValue(y: int, x: int): E
+    + setValue(y: int, x: int, value: E): void
+    + displayGrid(): void
 }
 
 class MultidokuGrid<E>{
@@ -82,6 +85,7 @@ enum Difficulte{
     FACILE
     MOYEN
     DIFFICILE
+    + getDescription(): String
 }
 
 Generator --> Difficulte
@@ -89,11 +93,19 @@ Generator --> Difficulte
 Abstract class Generator {
     # Difficulte difficulte
     + Generator(Difficulte ChoixDifficulte)
-    + GeneratePuzzle(Grid grid, Difficulte difficulte): Grid
+
 }
 Generator ..> Grid
 
 class GenerateFromComputer extends Generator{
+    + GenerateFromComputer(difficulte: Difficulte)
+    + GeneratePuzzle( grid: Grid<E>, difficulte: Difficulte): Grid<E>
+    + isGridEmpty(grid: Grid<E>): boolean
+    + generateSolvedGrid(grid: Grid<E>)
+    + makeGridPlayable(grid: Grid<E>, Difficulte difficulte)
+    + hasUniqueSolution(grid: Grid <E>): boolean
+    + getShuffledCells(grid: Grid<E>): List<Cell<E>>
+    + calculateCellsToRemove(difficulte Difficulte): int
 }
 
 class GenerateFromUser<E> extends Generator<E>{
@@ -147,8 +159,8 @@ class Logger {
 
 abstract class SolverStrategy {
     - logger: Logger
-    SolverStrategy(logger: Logger)
-    + solve(grid: Grid, AfficherLogs: boolean): boolean
+    + SolverStrategy(logger: Logger)
+    + abstract solve(grid: Grid<E>, AfficherLogs: boolean): boolean
     + getSteps(): List<String>
 }
 
