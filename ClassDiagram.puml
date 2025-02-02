@@ -2,7 +2,7 @@
 skinparam classAttributeIconSize 0
 'https://plantuml.com/class-diagram
 
-abstract class Grid{
+abstract class Grid<E>{
     # size : int
     # regions: List<Region>
     # cells : Cell<E>[ ][ ]
@@ -77,7 +77,7 @@ class ExclusionDirecte<E> extends Rule {
     + exclusionLigne(Grid<E> grid): boolean
     + exclusionColonne(Grid<E> grid): boolean
 }
-class PairesExclusives extends Rule {
+class PairesExclusives<E> extends Rule {
     + applyRule(grid: Grid): boolean
 }
 Rule..>Logger
@@ -96,7 +96,7 @@ enum Difficulte{
 
 Generator --> Difficulte
 
-Abstract class Generator {
+Abstract class Generator<E> {
     # Difficulte difficulte
     + Generator(Difficulte ChoixDifficulte)
 
@@ -104,7 +104,7 @@ Abstract class Generator {
 Generator ..> Grid
 GenerateFromComputer ..> Cell
 
-class GenerateFromComputer extends Generator{
+class GenerateFromComputer<E> extends Generator{
     + GenerateFromComputer(difficulte: Difficulte)
     + GeneratePuzzle( grid: Grid<E>, difficulte: Difficulte): Grid<E>
     + isGridEmpty(grid: Grid<E>): boolean
@@ -124,14 +124,14 @@ class GenerateFromUser<E> extends Generator<E>{
 GenerateFromUser..>ClassicSudokuGrid
 
 
-class MenuTextuel {
+class MenuTextuel<E> {
     - solver : SolverStrategy<E>
     - userGrid : ClassicSudokuGrid<E>
     + MenuTextuel()
     + afficherMenuTextuel()
     + LoadGridFromUserInputAndSolve()
     + generateGridFromComputer()
-    + chooseSolverFromUserInput : SolverStrategy<E>
+    + chooseSolverFromUserInput() : SolverStrategy<E>
     + solveGrid()
 }
 
@@ -148,7 +148,7 @@ class RuleBasedSolver<E> {
     + solve(grid : Grid<E>, afficherLogs boolean)
 }
 
-class BacktrackingSolver {
+class BacktrackingSolver<E> {
     +BackTrackingSolver(logger: Logger )
     +solve(grid : Grid<E>, afficherLogs : boolean)
     +solveBacktrack(grid : Grid<E>, afficherLogs : boolean)
@@ -169,7 +169,7 @@ class Logger {
     + exportLogs(): void
 }
 
-abstract class SolverStrategy {
+abstract class SolverStrategy<E> {
     - logger: Logger
     + SolverStrategy(logger: Logger)
     + abstract solve(grid: Grid<E>, AfficherLogs: boolean): boolean
