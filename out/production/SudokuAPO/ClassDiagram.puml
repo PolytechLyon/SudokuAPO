@@ -1,0 +1,176 @@
+@startuml
+skinparam classAttributeIconSize 0
+'https://plantuml.com/class-diagram
+
+abstract class Grid{
+    - size : int
+    - regions: List<Region>
+    + Grid(size : int, regions: List<Region>)
+    + {abstract} isValid(row : int, col : int, value : <E>) : boolean
+    + {abstract} solve() : boolean
+    + display() : void
+    + setValue(row : int, col : int, value : <E>) : void
+    + getValue(row : int, col : int) : <E>
+    + getRegionsForCell(row: int, col: int): List<Region>
+    + DisplayGrid()
+    + getRegionsForCell(): List<Region>
+}
+
+class Region {
+    - id: String
+    - cells: List<Cell>
+    +Region(cell: List<Cell>)
+    + addCell(cell: Cell)
+}
+
+class Cell {
+    -value : <E>
+    -x : int
+    -y : int
+    - linkedGrids: List<Grid>
+    +Cell(value,x,y)
+}
+
+class ClassicSudokuGrid{
+    + ClassicSudokuGrid()
+    + isValid(row : int, col : int, value : <E>) : boolean
+    + solve() : boolean
+}
+
+class MultidokuGrid{
+    - sharedCells: List<Cell>
+    + MultidokuGrid()
+    + addSharedCell(cell: Cell)
+    + isValid(row : int, col : int, value : <E>) : boolean
+    + solve() : boolean
+}
+
+abstract class Rule {
+    + applyRule(grid: Grid): boolean
+}
+class ExclusionDirecte extends Rule {
+    + applyRule(grid: Grid): boolean
+}
+class PairesExclusives extends Rule {
+    + applyRule(grid: Grid): boolean
+}
+class UniciteForcee extends Rule {
+    + applyRule(grid: Grid): boolean
+}
+
+enum Difficulte{
+    FACILE
+    MOYEN
+    DIFFICILE
+}
+
+Generator --> Difficulte
+
+Abstract class Generator {
+    Difficulte difficulte
+    + Generator(Difficulte ChoixDifficulte)
+    +GeneratePuzzle(Grid grid, Difficulte difficulte): Grid
+}
+Generator ..> Grid
+
+class GenerateFromComputer extends Generator{
+}
+
+class GenerateFromUser extends Generator{
+    + getUserInput(): Grid
+}
+
+class MenuTextuel {
+    - solver: SolverStrategy
+    +MenuTextuel()
+    + setSolver(): void
+    +LoadGridFromUserInputAndSolve()
+    +ChoisirMethodeResolution(grid: Grid, SolverStrategy method, AfficherLogs : boolean) : Grid
+    +GenererGrille(Grid grid, Difficulte difficulteChoisie): Grid
+    +LoadMenuTextuel()
+    +AskListOfPossibleValues()
+}
+
+MenuTextuel --> SolverStrategy
+
+
+
+class RuleBasedSolver {
+    - rules: List<Rule>
+    + addRule(rule: Rule): void
+}
+
+class BacktrackingSolver {
+    +findEmptyCell()
+}
+
+class HybridSolver {
+    - ruleSolver: RuleBasedSolver
+    - backtrackSolver: BacktrackingSolver
+}
+
+class Logger {
+    - logs: List<String>
+    + log(step: String): void
+    + exportLogs(): void
+    + clearLogs(): void
+}
+
+abstract class SolverStrategy {
+    - logger: Logger
+    SolverStrategy(logger: Logger)
+    + solve(grid: Grid, AfficherLogs: boolean): boolean
+    + getSteps(): List<String>
+}
+
+class MultidokuModernGUI {
+  - static final int GRID_SIZE : int
+  - sudokuGrid : ClassicSudokuGrid<Character>
+  - cellFields : JTextField[][]
+  - gridPanel : JPanel
+  - buttonPanel : JPanel
+  - controlPanel : JPanel
+  - sliderDifficulty : JSlider
+  - sliderLabel : JLabel
+  - btnSolve : JButton
+  - btnGenerate : JButton
+  - btnReset : JButton
+  - btnToggleTheme : JButton
+  - solverCombo : JComboBox<String>
+  - darkTheme : boolean
+  - logger : Logger
+  - possibleValues : Set<Character>
+  + MultidokuModernGUI()
+  - initializePossibleValues() : void
+  - initComponents() : void
+  - styleButton(btn : JButton, bgColor : Color) : void
+  - updateUIFromGrid() : void
+  - updateTheme() : void
+  - removeCells(count : int) : void
+  + main(args : String[]) : void
+}
+
+SolverStrategy --> Logger : utilise
+
+Generator<--MenuTextuel
+
+Grid <|-- MultidokuGrid
+Grid <|-- ClassicSudokuGrid
+Grid *-- Region
+Grid <-- SolverStrategy
+
+GenerateFromComputer ..> SolverStrategy
+
+MultidokuGrid o-- "1 à n" ClassicSudokuGrid
+
+Region *-- Cell
+
+SolverStrategy <|-- RuleBasedSolver
+SolverStrategy <|-- HybridSolver
+SolverStrategy <|-- BacktrackingSolver
+RuleBasedSolver "1" *-- "1..*" Rule
+HybridSolver --> RuleBasedSolver
+
+
+
+@enduml
