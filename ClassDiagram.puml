@@ -61,11 +61,15 @@ class MultidokuGrid<E>{
     + setValue(row : int, col : int, value : <E>)
 }
 
+MultidokuGrid o-- "1..*" Cell : utilise
+MultidokuGrid ..> "1..*"Region : utilise
+
 abstract class Rule<E> {
     #logger : Logger
     +Rule(Logger logger)
-    + applyRule(grid: Grid): boolean
+    + {abstract}applyRule(grid: Grid): boolean
 }
+Rule-->logger
 class ExclusionDirecte<E> extends Rule {
     + applyRule(grid<E>: Grid): boolean
     + ExclusionDirecte(logger Logger)
@@ -76,6 +80,8 @@ class ExclusionDirecte<E> extends Rule {
 class PairesExclusives extends Rule {
     + applyRule(grid: Grid): boolean
 }
+Rule..>Logger
+
 class UniciteForcee<E> extends Rule {
     + applyRule(grid: Grid): boolean
     + uniciteForceeRegion(Grid<E> grid): boolean
@@ -96,6 +102,7 @@ Abstract class Generator {
 
 }
 Generator ..> Grid
+GenerateFromComputer ..> Cell
 
 class GenerateFromComputer extends Generator{
     + GenerateFromComputer(difficulte: Difficulte)
@@ -108,10 +115,14 @@ class GenerateFromComputer extends Generator{
     + calculateCellsToRemove(difficulte Difficulte): int
 }
 
+GenerateFromComputer --> Grid
+
 class GenerateFromUser<E> extends Generator<E>{
     + GenerateFromUser(difficulte : Difficulte)
     + generateUserGrid() : Grid<E>
 }
+GenerateFromUser..>ClassicSudokuGrid
+
 
 class MenuTextuel {
     - solver : SolverStrategy<E>
@@ -125,6 +136,7 @@ class MenuTextuel {
 }
 
 MenuTextuel --> SolverStrategy
+MenuTextuel --> ClassicSudokuGrid
 
 
 
@@ -163,6 +175,7 @@ abstract class SolverStrategy {
     + abstract solve(grid: Grid<E>, AfficherLogs: boolean): boolean
     + getSteps(): List<String>
 }
+SolverStrategy ..> Grid
 
 class SudokuModernGUI {
   - static final int GRID_SIZE : int
@@ -205,6 +218,7 @@ GenerateFromComputer ..> SolverStrategy
 MultidokuGrid o-- "1 Ã  n" ClassicSudokuGrid
 
 Region *-- Cell
+Grid *-- Cell
 
 SolverStrategy <|-- RuleBasedSolver
 SolverStrategy <|-- HybridSolver

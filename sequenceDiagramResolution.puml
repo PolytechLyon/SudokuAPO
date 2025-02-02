@@ -1,9 +1,10 @@
 @startuml
-title example
+title Grille Rentré par l'utilisateur et résolu
 actor User
 
 User->"m1 : MenuTextuel" : LoadGridFromUserInputAndSolve(false)
-
+"m1 : MenuTextuel"->"m1 : MenuTextuel" : chooseSolverFromUserInput()
+"m1 : MenuTextuel" -> "generator : GenerateFromUser" ** : create
 
 
 "m1 : MenuTextuel"->"gen1 : GenerateFromUser" : getUserInput()

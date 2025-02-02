@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class GenerateFromComputer<E> extends Generator<E> {
-
+    Difficulte difficulte;
     public GenerateFromComputer(Difficulte difficulte) {
         super(difficulte);
     }
