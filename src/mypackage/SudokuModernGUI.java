@@ -15,9 +15,11 @@ public class SudokuModernGUI extends JFrame {
     private static final int GRID_SIZE = 9; // Sudoku classique 9x9
     private ClassicSudokuGrid<Character> sudokuGrid;
     private JTextField[][] cellFields;
+    private JPanel mainPanel;    // Panneau principal
     private JPanel gridPanel;
     private JPanel buttonPanel;
     private JPanel controlPanel; // Pour le slider et la sélection du solveur
+    private JPanel bottomPanel;  // Contient buttonPanel et controlPanel
     private JSlider sliderDifficulty;
     private JLabel sliderLabel;
     private JButton btnSolve, btnGenerate, btnReset, btnToggleTheme;
@@ -52,11 +54,11 @@ public class SudokuModernGUI extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
         // Panneau principal
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(darkTheme ? new Color(45, 45, 45) : Color.WHITE);
 
-        // Création du panneau de la grille
+        // Panneau de la grille
         gridPanel = new JPanel(new GridLayout(GRID_SIZE, GRID_SIZE));
         gridPanel.setBackground(mainPanel.getBackground());
         cellFields = new JTextField[GRID_SIZE][GRID_SIZE];
@@ -65,12 +67,11 @@ public class SudokuModernGUI extends JFrame {
                 JTextField tf = new JTextField();
                 tf.setHorizontalAlignment(JTextField.CENTER);
                 tf.setFont(new Font("SansSerif", Font.BOLD, 24));
-                // Initialisation de la bordure (la couleur sera mise à jour dans updateTheme())
-                tf.setBorder(new MatteBorder( (i % 3 == 0) ? 3 : 1,
-                        (j % 3 == 0) ? 3 : 1,
-                        (i == GRID_SIZE - 1) ? 3 : 1,
-                        (j == GRID_SIZE - 1) ? 3 : 1,
-                        Color.DARK_GRAY));
+                int top = (i % 3 == 0) ? 3 : 1;
+                int left = (j % 3 == 0) ? 3 : 1;
+                int bottom = (i == GRID_SIZE - 1) ? 3 : 1;
+                int right = (j == GRID_SIZE - 1) ? 3 : 1;
+                tf.setBorder(new MatteBorder(top, left, bottom, right, Color.DARK_GRAY));
                 cellFields[i][j] = tf;
                 gridPanel.add(tf);
             }
@@ -85,10 +86,14 @@ public class SudokuModernGUI extends JFrame {
         btnReset = new JButton("Reset");
         btnToggleTheme = new JButton("Dark Theme");
 
-        // Combobox pour choisir la méthode de résolution (BackTrackingSolver et RuleBasedSolver)
+        // Combobox pour choisir la méthode de résolution
         String[] solverOptions = { "BackTrackingSolver", "RuleBasedSolver" };
         solverCombo = new JComboBox<>(solverOptions);
         solverCombo.setFont(new Font("SansSerif", Font.BOLD, 16));
+        // Application d'un renderer moderne pour le JComboBox
+        solverCombo.setRenderer(new ModernComboBoxRenderer());
+        solverCombo.setOpaque(false);
+        solverCombo.setBackground(mainPanel.getBackground());
 
         styleButton(btnSolve, new Color(52, 152, 219));
         styleButton(btnGenerate, new Color(46, 204, 113));
@@ -127,10 +132,10 @@ public class SudokuModernGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int level = sliderDifficulty.getValue(); // 1: EASY, 2: MEDIUM, 3: HARD
-                // Pour la génération, on résout d'abord la grille complète en utilisant le BackTrackingSolver
+                // Pour générer, on résout d'abord la grille complète via BackTrackingSolver
                 BackTrackingSolver<Character> btSolver = new BackTrackingSolver<>(logger);
                 btSolver.solve(sudokuGrid, false);
-                // En fonction du niveau, on retire un nombre de cellules prédéfini
+                // Déterminer le nombre de cellules à retirer selon le niveau de difficulté
                 int cellsToRemove = (level == 1) ? 30 : (level == 2) ? 40 : 50;
                 removeCells(cellsToRemove);
                 updateUIFromGrid();
@@ -175,8 +180,8 @@ public class SudokuModernGUI extends JFrame {
         controlPanel.add(sliderLabel);
         controlPanel.add(sliderDifficulty);
 
-        // Regrouper boutons et slider
-        JPanel bottomPanel = new JPanel();
+        // Regrouper boutons et contrôle dans un panneau bas
+        bottomPanel = new JPanel();
         bottomPanel.setBackground(mainPanel.getBackground());
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         bottomPanel.add(buttonPanel);
@@ -186,6 +191,29 @@ public class SudokuModernGUI extends JFrame {
 
         updateTheme();
         setVisible(true);
+    }
+
+    // Renderer personnalisé pour le JComboBox
+    private class ModernComboBoxRenderer extends JLabel implements ListCellRenderer<String> {
+        public ModernComboBoxRenderer() {
+            setOpaque(true);
+            setFont(new Font("SansSerif", Font.BOLD, 16));
+            setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends String> list, String value, int index,
+                                                      boolean isSelected, boolean cellHasFocus) {
+            setText(value);
+            if (isSelected) {
+                setBackground(new Color(52, 152, 219));
+                setForeground(Color.WHITE);
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+            return this;
+        }
     }
 
     // Applique un style commun aux boutons
@@ -211,16 +239,17 @@ public class SudokuModernGUI extends JFrame {
         Color bg = darkTheme ? new Color(45, 45, 45) : Color.WHITE;
         Color fg = darkTheme ? Color.WHITE : Color.BLACK;
         getContentPane().setBackground(bg);
+        mainPanel.setBackground(bg);
         gridPanel.setBackground(bg);
         buttonPanel.setBackground(bg);
         controlPanel.setBackground(bg);
+        bottomPanel.setBackground(bg);
 
-        // Mettre à jour les cellules et leurs bordures pour améliorer le contraste en thème foncé
+        // Mettre à jour les cellules et leurs bordures pour le thème foncé
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 cellFields[i][j].setBackground(darkTheme ? new Color(60, 63, 65) : Color.WHITE);
                 cellFields[i][j].setForeground(fg);
-                // Redéfinir la bordure : si thème foncé, utiliser du blanc pour les séparateurs
                 int top = (i % 3 == 0) ? 3 : 1;
                 int left = (j % 3 == 0) ? 3 : 1;
                 int bottom = (i == GRID_SIZE - 1) ? 3 : 1;

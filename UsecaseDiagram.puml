@@ -1,22 +1,45 @@
 @startuml
 left to right direction
 
-rectangle (UseCaseDiagramSudoku) {
-    (générer) .> (Choisir Nombre) : include
-    (générer) .> (Choisir Difficulté) : include
-    (générer) <|-- (Sudoku)
-    (générer) <|-- (MultiDoku)
-    (Rentrer Grille) .> (Choisir Méthode Résolution) : include
-    (Choisir Méthode Résolution) <|-- (Règles à préciser)
-    (Règles à préciser) <|-- (Algo déduction 1)
-    (Règles à préciser) <|-- (Algo déduction 2)
-    (Choisir Méthode Résolution) <|-- (Retour sur trace)
-    (Choisir Méthode Résolution) <. (Afficher les logs) : extends
-    (Afficher Grille) .> (Choisir Méthode Résolution) : extends
-    (Afficher Sudoku) <|-- (résolvable)
-    (Afficher Sudoku) <|-- (non résolvable)
+rectangle "Interface Graphique Sudoku" {
+  (Générer Puzzle via GUI) .> (Choisir Difficulté) : include
+  (Générer Puzzle via GUI) <|-- (Sudoku Classique)
+  (Rentrer Grille via GUI) .> (Choisir Méthode Résolution via GUI) : include
+  (Afficher Grille via GUI)
 }
-:Utilisateur: -->(générer)
-:Utilisateur: -->(Rentrer Grille)
+note right of "Interface Graphique Sudoku"
+  Générer Puzzle via GUI : Permet de générer un puzzle en utilisant l'interface graphique,
+    en choisissant le niveau de difficulté.
+  Choisir Difficulté : L'utilisateur sélectionne le niveau de difficulté (EASY, MEDIUM, HARD).
+  Sudoku Classique : Puzzle de Sudoku classique (MultiDoku n'est pas accessible via le GUI).
+  Rentrer Grille via GUI : Permet à l'utilisateur de saisir manuellement une grille via le GUI.
+  Choisir Méthode Résolution via GUI : Permet de choisir la méthode de résolution (ex : BackTracking, RuleBased).
+  Afficher Grille via GUI : Affiche la grille actuelle dans l'interface graphique.
+end note
+
+rectangle "Interface Console Sudoku" {
+  (Générer Puzzle via Console) .> (Choisir Difficulté) : include
+  (Générer Puzzle via Console) <|-- (Sudoku Classique)
+  (Générer Puzzle via Console) <|-- (MultiDoku)
+  (Rentrer Grille via Console) .> (Choisir Méthode Résolution via Console) : include
+  (Afficher Grille via Console)
+}
+note right of "Interface Console Sudoku"
+  Générer Puzzle via Console : Permet de générer un puzzle via la console.
+  Choisir Difficulté : L'utilisateur sélectionne le niveau de difficulté via la console.
+  Sudoku Classique : Puzzle de Sudoku classique.
+  MultiDoku : Puzzle MultiDoku accessible via la console.
+  Rentrer Grille via Console : Permet à l'utilisateur de saisir manuellement une grille via la console.
+  Choisir Méthode Résolution via Console : Permet de choisir la méthode de résolution via la console.
+  Afficher Grille via Console : Affiche la grille actuelle dans la console.
+end note
+
+actor "Utilisateur" as User
+User --> (Générer Puzzle via GUI)
+User --> (Rentrer Grille via GUI)
+User --> (Afficher Grille via GUI)
+User --> (Générer Puzzle via Console)
+User --> (Rentrer Grille via Console)
+User --> (Afficher Grille via Console)
 
 @enduml
