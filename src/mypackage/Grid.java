@@ -21,24 +21,19 @@ public abstract class Grid {
     // Obtenir la valeur d'une cellule dans la grille
     public abstract <E> E getValue(int y, int x);
 
-    // Méthode pour afficher la grille
-    public void display() {
-        // A voir si on souhaite afficher quelque chose dans la classe mère ou si c'est spécifique aux sous-classes
-    }
-
     // Définir la valeur dans la grille
     public abstract <E> void setValue(int y, int x, E value);
 
-    // Récupérer les régions associées à une cellule
-    public List<Region> getRegionsForCell(int y, int x) {
-        List<Region> result = new ArrayList<>();
-        for (Region region : regions) {
-            if (region.containsCell(y, x)) {
-                result.add(region);
-            }
-        }
-        return result;
-    }
+//    // Récupérer les régions associées à une cellule
+//    public List<Region> getRegionsForCell(int y, int x) {
+//        List<Region> result = new ArrayList<>();
+//        for (Region region : regions) {
+//            if (region.containsCell(y, x)) {
+//                result.add(region);
+//            }
+//        }
+//        return result;
+//    }
 
     // Getters et setters
     public int getSize() {

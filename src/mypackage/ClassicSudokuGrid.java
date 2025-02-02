@@ -1,96 +1,43 @@
 package src.mypackage;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class ClassicSudokuGrid extends Grid {
+public class ClassicSudokuGrid extends SudokuModulable {
 
     // Constructeur
     public ClassicSudokuGrid() {
         super(9); // Un Sudoku classique a une grille de 9x9
-        initializeRegions();
     }
 
-    // Initialisation des régions (chaque bloc 3x3 est une région)
-    private void initializeRegions() {
-        for (int i = 0; i < 9; i++) {
-            regions.add(new Region("Bloc " + i));
-        }
+    // Surcharger displayGrid() pour un Sudoku 9x9
+    @Override
+    public void displayGrid() {
+        System.out.println("Affichage de la grille classique 9x9 :");
 
-        // Ajouter les cellules aux régions correspondantes
+        // Affichage de la grille ligne par ligne
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 9; x++) {
-                int regionIndex = (y / 3) * 3 + (x / 3);
-                Cell<Integer> cell = new Cell<>(null, x, y); // x = colonne, y = ligne
-                regions.get(regionIndex).addCell(cell);
-            }
-        }
-    }
+                Object value = getValue(y, x); // Récupère la valeur à la position (y, x)
 
-    // Vérifier si une valeur est valide selon les règles du Sudoku classique
-    @Override
-    public <E> boolean isValid(int y, int x, E value) {
-        if (!(value instanceof Integer)) {
-            return false; // Sudoku classique utilise des nombres entiers
-        }
-        int num = (Integer) value;
-
-        // Vérifier la ligne (y fixe, on parcourt x)
-        for (int i = 0; i < 9; i++) {
-            if (getValue(y, i) != null && getValue(y, i).equals(num)) return false;
-        }
-
-        // Vérifier la colonne (x fixe, on parcourt y)
-        for (int i = 0; i < 9; i++) {
-            if (getValue(i, x) != null && getValue(i, x).equals(num)) return false;
-        }
-
-        // Vérifier le bloc 3x3
-        int startY = (y / 3) * 3;
-        int startX = (x / 3) * 3;
-        for (int i = startY; i < startY + 3; i++) {
-            for (int j = startX; j < startX + 3; j++) {
-                if (getValue(i, j) != null && getValue(i, j).equals(num)) return false;
-            }
-        }
-
-        return true;
-    }
-
-    // Obtenir la valeur d'une cellule
-    @Override
-    public <E> E getValue(int y, int x) {
-        for (Region region : regions) {
-            for (Cell<?> cell : region.getCells()) {
-                if (cell.getX() == x && cell.getY() == y) {
-                    return (E) cell.getValue();
+                // Affiche un point (.) si la valeur est nulle (case vide)
+                if (value == null) {
+                    value = "."; // Valeur vide à afficher comme un point
                 }
-            }
-        }
-        return null;
-    }
 
-    @Override
-    public <E> void setValue(int row, int col, E value) {
-        if (!(value instanceof Integer)) {
-            System.out.println("❌ Erreur : Valeur non entière !");
-            return;
-        }
-
-        if (isValid(row, col, value)) {
-            for (Region region : regions) {
-                for (Cell<?> cell : region.getCells()) {
-                    if (cell.getX() == col && cell.getY() == row) {
-                        @SuppressWarnings("unchecked")
-                        Cell<Integer> typedCell = (Cell<Integer>) cell;
-                        typedCell.setValue((Integer) value);
-                        return;
-                    }
+                // Ajouter un séparateur vertical après chaque 3ème colonne
+                if (x % 3 == 0 && x != 0) {
+                    System.out.print("| ");
                 }
+
+                // Affiche la valeur
+                System.out.print(value + " ");
             }
-        } else {
-            System.out.println("❌ Impossible d'ajouter " + value + " en (" + row + ", " + col + ")");
+            System.out.println();
+
+            // Ajouter une ligne de séparation après chaque bloc de 3x3
+            if ((y + 1) % 3 == 0 && y != 8) {
+                System.out.println("---------------------");
+            }
         }
     }
 
+    // Autres méthodes ou ajustements peuvent être ajoutés ici si nécessaire
 }
