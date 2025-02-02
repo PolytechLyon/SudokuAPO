@@ -13,6 +13,7 @@ abstract class Grid{
     + getValue(row : int, col : int) : <E>
     + getRegionsForCell(row: int, col: int): List<Region>
     + DisplayGrid()
+    + getRegionsForCell(): List<Region>
 }
 
 class Region {

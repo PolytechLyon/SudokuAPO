@@ -5,10 +5,13 @@ User->"m1 : MenuTextuel" : LoadGridFromUserInputAndSolve(false)
 
 
 
-"m1 : MenuTextuel"->"gen1 : GenerateFromUser" : getUserInput() new grid1 Grid
+"m1 : MenuTextuel"->"gen1 : GenerateFromUser" : getUserInput()
 "gen1 : GenerateFromUser" -> "g1 : Grid" ** : create
 "gen1 : GenerateFromUser"<--"g1 : Grid" : g1 : Grid
 "gen1 : GenerateFromUser"-->"m1 : MenuTextuel" : g1 : Grid
+
+"User"->"m1 : MenuTextuel" : SetSolver()
+
 
 "m1 : MenuTextuel"->"b1 : BacktrackingSolver" : solve(g1, false)
 
