@@ -1,14 +1,20 @@
 package src;
 
-import src.mypackage.Cell;
-import src.mypackage.ClassicSudokuGrid;
-import src.mypackage.MultidokuGrid;
-import src.mypackage.Region;
+import src.mypackage.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
+        Set<Integer> possibleValues = new HashSet<>();
+
+        // 📌 Ajouter les nombres de 1 à 9
+        for (int i = 1; i <= 9; i++) {
+            possibleValues.add(i);
+        }
         // Création d'une instance de ClassicSudokuGrid
-        ClassicSudokuGrid sudokuGrid = new ClassicSudokuGrid();
+        SudokuModulable sudokuGrid = new SudokuModulable<Integer>(9, possibleValues);
 
         // Affichage de la grille initiale
         sudokuGrid.displayGrid();

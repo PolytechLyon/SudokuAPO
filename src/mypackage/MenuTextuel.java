@@ -24,7 +24,7 @@ public class MenuTextuel {
         System.out.print("Entrez les valeurs possibles séparées par des espaces (ex: 1 2 3 ... 9 ou A B C ... F) : ");
         String[] values = scanner.nextLine().split(" ");
         possibleValues.addAll(Arrays.asList(values));
-        Grid userGrid = new ClassicSudokuGrid();
+        Grid userGrid = new SudokuModulable(size, possibleValues);
     }
 
     public SolverStrategy chooseSolverFromUserInput() {
@@ -55,7 +55,5 @@ public class MenuTextuel {
     public void setSolver(SolverStrategy solver) {
         this.solver = solver;
     }
-
-
 
 }
