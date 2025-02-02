@@ -24,7 +24,7 @@ public class MenuTextuel<E> {
         while (continuer) {
             System.out.println("\n🔷 MENU PRINCIPAL 🔷");
             System.out.println("1️⃣ - Charger une grille depuis l'input utilisateur");
-            System.out.println("2️⃣ - Choisir un solveur");
+            System.out.println("2️⃣ - Choisir un ou des solveurs");
             System.out.println("3️⃣ - Résoudre la grille");
             System.out.println("4️⃣ - Afficher la grille");
             System.out.println("5️⃣ - Quitter");
@@ -114,9 +114,25 @@ public class MenuTextuel<E> {
                 System.out.println("⚠️ Erreur : Ligne et colonne doivent être des nombres !");
             }
         }
-
-        System.out.println("✅ Grille finale avant résolution :");
-        userGrid.displayGrid();
+//
+//        // 📌 5️⃣ Résolution de la grille après la saisie
+//        if (solver == null) {
+//            System.out.println("⚠️ Aucun solveur sélectionné. Veuillez choisir un solveur.");
+//            solver = chooseSolverFromUserInput(); // 📌 L'utilisateur choisit un solveur
+//        }
+//
+//        System.out.println("🔄 Résolution de la grille...");
+//        boolean solved = solver.solve(userGrid, true);
+//
+//        if (solved) {
+//            System.out.println("✅ La grille a été résolue avec succès !");
+//        } else {
+//            System.out.println("❌ La grille ne peut pas être résolue !");
+//        }
+//
+//        // 📌 Afficher la grille après la résolution
+//        System.out.println("🧩 Grille après résolution :");
+//        userGrid.displayGrid();
 
     }
 
