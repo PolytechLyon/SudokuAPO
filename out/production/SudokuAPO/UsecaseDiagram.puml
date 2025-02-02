@@ -1,0 +1,22 @@
+@startuml
+left to right direction
+
+rectangle (UseCaseDiagramSudoku) {
+    (générer) .> (Choisir Nombre) : include
+    (générer) .> (Choisir Difficulté) : include
+    (générer) <|-- (Sudoku)
+    (générer) <|-- (MultiDoku)
+    (Rentrer Grille) .> (Choisir Méthode Résolution) : include
+    (Choisir Méthode Résolution) <|-- (Règles à préciser)
+    (Règles à préciser) <|-- (Algo déduction 1)
+    (Règles à préciser) <|-- (Algo déduction 2)
+    (Choisir Méthode Résolution) <|-- (Retour sur trace)
+    (Choisir Méthode Résolution) <. (Afficher les logs) : extends
+    (Afficher Grille) .> (Choisir Méthode Résolution) : extends
+    (Afficher Sudoku) <|-- (résolvable)
+    (Afficher Sudoku) <|-- (non résolvable)
+}
+:Utilisateur: -->(générer)
+:Utilisateur: -->(Rentrer Grille)
+
+@enduml

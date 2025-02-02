@@ -1,0 +1,50 @@
+@startuml
+class Multidoku {
+    - List<SudokuGrid> SudokuGrid
+    - List<SharedRegion> sharedRegions
+}
+class SudokuGrid{
+
+}
+
+class Bloc {
+    -taille : int
+    + Bloc(taille : int)
+}
+
+class Cell {
+    -value : <E>
+    + Cell(Value : int)
+}
+
+class Menu {
+    + générer() : void
+    + choisirDifficulte() : void
+}
+
+class Solver {
+}
+class Contraintes {
+}
+
+class Generator {
+}
+
+Multidoku o-- "1 à n" SudokuGrid
+Solver*-- "1 à n" Contraintes
+SudokuGrid<--Solver
+SudokuGrid*-- "1 à n" Bloc
+Bloc*-- "1 à n" Cell
+Generator ..> Solver
+BackTracking <|-- Solver
+@enduml
+
+    # size : int
+    # grid : int[][]
+
+    + SudokuGrid(size : int)
+    + {abstract} isValid(row : int, col : int, value : int) : boolean
+    + {abstract} solve() : boolean
+    + display() : void
+    + setValue(row : int, col : int, value : int) : void
+    + getValue(row : int, col : int) : int
