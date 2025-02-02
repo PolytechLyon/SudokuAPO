@@ -10,6 +10,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * Classe principale représentant l'interface graphique moderne de Sudoku avec Java Swing.
+ * Cette classe permet de résoudre des grilles de Sudoku, de les générer, de réinitialiser et de basculer entre les thèmes clair et foncé.
+ */
 public class SudokuModernGUI extends JFrame {
 
     private static final int GRID_SIZE = 9; // Sudoku classique 9x9
@@ -30,6 +34,10 @@ public class SudokuModernGUI extends JFrame {
     // Ensemble des valeurs possibles (lettres de A à I)
     private Set<Character> possibleValues;
 
+    /**
+     * Constructeur de la classe SudokuModernGUI.
+     * Initialise les composants et configure le Sudoku avec des valeurs possibles allant de 'A' à 'I'.
+     */
     public SudokuModernGUI() {
         super("Sudoku Modern GUI");
         initializePossibleValues();
@@ -40,6 +48,9 @@ public class SudokuModernGUI extends JFrame {
         updateUIFromGrid();
     }
 
+    /**
+     * Initialise les valeurs possibles du Sudoku (lettres de 'A' à 'I').
+     */
     private void initializePossibleValues() {
         possibleValues = new HashSet<>();
         for (char c = 'A'; c <= 'I'; c++) {
@@ -47,6 +58,10 @@ public class SudokuModernGUI extends JFrame {
         }
     }
 
+    /**
+     * Initialise tous les composants de l'interface graphique.
+     * Configure les boutons, le panneau de la grille, le slider, et les actions associées.
+     */
     private void initComponents() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 800);
@@ -193,6 +208,11 @@ public class SudokuModernGUI extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Applique un style commun aux boutons.
+     * @param btn Le bouton à styliser.
+     * @param bgColor La couleur de fond du bouton.
+     */
     // Renderer personnalisé pour le JComboBox
     private class ModernComboBoxRenderer extends JLabel implements ListCellRenderer<String> {
         public ModernComboBoxRenderer() {
@@ -224,7 +244,10 @@ public class SudokuModernGUI extends JFrame {
         btn.setFocusPainted(false);
     }
 
-    // Met à jour l'affichage de la grille dans le GUI
+    /**
+     * Met à jour l'affichage de la grille dans l'interface utilisateur.
+     * Les valeurs des cellules sont extraites du modèle de données (sudokuGrid).
+     */
     private void updateUIFromGrid() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
@@ -234,7 +257,9 @@ public class SudokuModernGUI extends JFrame {
         }
     }
 
-    // Met à jour le thème clair/foncé pour tous les composants
+    /**
+     * Met à jour le thème de l'interface (clair/foncé).
+     */
     private void updateTheme() {
         Color bg = darkTheme ? new Color(45, 45, 45) : Color.WHITE;
         Color fg = darkTheme ? Color.WHITE : Color.BLACK;
@@ -250,6 +275,7 @@ public class SudokuModernGUI extends JFrame {
             for (int j = 0; j < GRID_SIZE; j++) {
                 cellFields[i][j].setBackground(darkTheme ? new Color(60, 63, 65) : Color.WHITE);
                 cellFields[i][j].setForeground(fg);
+                // Redéfinir la bordure : si thème foncé, utiliser du blanc pour les séparateurs
                 int top = (i % 3 == 0) ? 3 : 1;
                 int left = (j % 3 == 0) ? 3 : 1;
                 int bottom = (i == GRID_SIZE - 1) ? 3 : 1;
@@ -271,7 +297,10 @@ public class SudokuModernGUI extends JFrame {
         repaint();
     }
 
-    // Retire aléatoirement 'count' cellules de la grille (en mettant leur valeur à null)
+    /**
+     * Retire un nombre défini de cellules de la grille de Sudoku (en mettant leur valeur à null).
+     * @param count Le nombre de cellules à retirer.
+     */
     private void removeCells(int count) {
         int total = GRID_SIZE * GRID_SIZE;
         int removed = 0;
@@ -287,7 +316,9 @@ public class SudokuModernGUI extends JFrame {
         }
     }
 
-    // UI personnalisée simple pour le JSlider
+    /**
+     * Classe personnalisée pour l'UI du JSlider afin de changer son apparence.
+     */
     private static class SimpleSliderUI extends BasicSliderUI {
         public SimpleSliderUI(JSlider slider) {
             super(slider);
@@ -333,6 +364,9 @@ public class SudokuModernGUI extends JFrame {
         }
     }
 
+    /**
+     * Point d'entrée de l'application, lance l'interface graphique.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SudokuModernGUI());
     }
