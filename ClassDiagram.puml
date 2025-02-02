@@ -3,12 +3,17 @@ skinparam classAttributeIconSize 0
 'https://plantuml.com/class-diagram
 
 abstract class Grid{
-    - size : int
-    - regions: List<Region>
-    + Grid(size : int, regions: List<Region>)
+    # size : int
+    # regions: List<Region>
+    # cells : Cell<E>[ ][ ]
+    + Grid(size : int)
     + {abstract} isValid(row : int, col : int, value : <E>) : boolean
-    + {abstract} solve() : boolean
-    + display() : void
+    + {abstract} getValue() : E
+    + {abstract} setValue() : E
+    + getRegions() : List<Region<E>>
+    + addRegion()
+    + getValuesForRow(y : int) : Set<E>
+    + getSize() : int
     + setValue(row : int, col : int, value : <E>) : void
     + getValue(row : int, col : int) : <E>
     + getRegionsForCell(row: int, col: int): List<Region>
@@ -67,7 +72,7 @@ enum Difficulte{
 Generator --> Difficulte
 
 Abstract class Generator {
-    Difficulte difficulte
+    # Difficulte difficulte
     + Generator(Difficulte ChoixDifficulte)
     +GeneratePuzzle(Grid grid, Difficulte difficulte): Grid
 }
@@ -123,6 +128,33 @@ abstract class SolverStrategy {
     + getSteps(): List<String>
 }
 
+class SudokuModernGUI {
+  - static final int GRID_SIZE : int
+  - sudokuGrid : ClassicSudokuGrid<Character>
+  - cellFields : JTextField[][]
+  - gridPanel : JPanel
+  - buttonPanel : JPanel
+  - controlPanel : JPanel
+  - sliderDifficulty : JSlider
+  - sliderLabel : JLabel
+  - btnSolve : JButton
+  - btnGenerate : JButton
+  - btnReset : JButton
+  - btnToggleTheme : JButton
+  - solverCombo : JComboBox<String>
+  - darkTheme : boolean
+  - logger : Logger
+  - possibleValues : Set<Character>
+  + MultidokuModernGUI()
+  - initializePossibleValues() : void
+  - initComponents() : void
+  - styleButton(btn : JButton, bgColor : Color) : void
+  - updateUIFromGrid() : void
+  - updateTheme() : void
+  - removeCells(count : int) : void
+  + main(args : String[]) : void
+}
+
 SolverStrategy --> Logger : utilise
 
 Generator<--MenuTextuel
@@ -134,7 +166,7 @@ Grid <-- SolverStrategy
 
 GenerateFromComputer ..> SolverStrategy
 
-MultidokuGrid o-- "1 à n" ClassicSudokuGrid
+MultidokuGrid o-- "1 Ã  n" ClassicSudokuGrid
 
 Region *-- Cell
 
@@ -143,6 +175,10 @@ SolverStrategy <|-- HybridSolver
 SolverStrategy <|-- BacktrackingSolver
 RuleBasedSolver "1" *-- "1..*" Rule
 HybridSolver --> RuleBasedSolver
+SudokuModernGUI --> ClassicSudokuGrid
+SudokuModernGUI --> Logger
+SudokuModernGUI --> SolverStrategy
+
 
 
 

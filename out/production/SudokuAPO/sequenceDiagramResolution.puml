@@ -1,4 +1,5 @@
 @startuml
+title example
 actor User
 
 User->"m1 : MenuTextuel" : LoadGridFromUserInputAndSolve(false)
