@@ -5,8 +5,6 @@ import java.util.Set;
 
 public class ClassicSudokuGrid<E> extends Grid<E> {
 
-    private Cell<E>[][] cells; // Grille des cellules
-
     public ClassicSudokuGrid(int size, Set<E> possibleValues) {
         super(size);
         this.cells = new Cell[size][size];
@@ -96,4 +94,20 @@ public class ClassicSudokuGrid<E> extends Grid<E> {
             }
         }
     }
+
+    // ✅ Fonction pour afficher les valeurs possibles de chaque cellule avec coordonnées
+    public void displayPossibleValues() {
+        System.out.println("\n🔍 Valeurs possibles après application des règles :\n");
+
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                Cell<E> cell = getCell(y, x); // 📌 Récupérer la cellule
+                if (cell.getValue() == null) {
+                    System.out.printf("(%d,%d) %s\t", y, x, cell.getPossibleValues());
+                }
+            }
+            System.out.println();
+        }
+    }
+
 }

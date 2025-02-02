@@ -11,6 +11,7 @@ import java.util.Set;
 public abstract class Grid<E> {
     protected int size; // Taille de la grille
     protected List<Region<E>> regions; // Liste des régions
+    protected Cell<E>[][] cells; // Grille des cellules
 
     // Constructeur
     public Grid(int size) {
@@ -64,5 +65,9 @@ public abstract class Grid<E> {
         }
 
         return colValues;
+    }
+
+    public Cell<E> getCell(int y, int x) {
+        return cells[y][x];
     }
 }
