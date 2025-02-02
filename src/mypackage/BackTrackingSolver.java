@@ -38,7 +38,7 @@ public class BackTrackingSolver<E> extends SolverStrategy<E> {
      * 🔥 Algorithme principal de Backtracking
      * Essaie de remplir les cellules vides avec des valeurs possibles
      */
-    private boolean solveBacktrack(Grid<E> grid, boolean afficherLogs) {
+    public boolean solveBacktrack(Grid<E> grid, boolean afficherLogs) {
         Cell<E> emptyCell = findEmptyCell(grid); // 🔍 Trouver une cellule vide
         if (emptyCell == null) return true; // ✅ Sudoku résolu si plus de cellules vides
 
@@ -80,7 +80,7 @@ public class BackTrackingSolver<E> extends SolverStrategy<E> {
     /**
      * 📌 Trouve une cellule vide dans la grille
      */
-    private Cell<E> findEmptyCell(Grid<E> grid) {
+    public Cell<E> findEmptyCell(Grid<E> grid) {
         for (Region<E> region : grid.getRegions()) {
             for (Cell<E> cell : region.getCells()) {
                 if (cell.getValue() == null) {
