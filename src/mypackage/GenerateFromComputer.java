@@ -3,16 +3,15 @@ package src.mypackage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-
-public class GenerateFromComputer extends Generator {
+public class GenerateFromComputer<E> extends Generator<E> {
 
     public GenerateFromComputer(Difficulte difficulte) {
         super(difficulte);
     }
 
-    @Override
-    public Grid GeneratePuzzle(Grid grid, Difficulte difficulte) {
+    public Grid<E> GeneratePuzzle(Grid<E> grid, Difficulte difficulte) {
         // Vérifier si la grille est vide avant de la remplir
         if (isGridEmpty(grid)) {
             generateSolvedGrid(grid);
@@ -24,30 +23,39 @@ public class GenerateFromComputer extends Generator {
         return grid;
     }
 
-    private boolean isGridEmpty(Grid grid) {
+    /**
+     * Vérifie si la grille est vide (aucune valeur assignée).
+     */
+    private boolean isGridEmpty(Grid<E> grid) {
         for (int y = 0; y < grid.getSize(); y++) {
             for (int x = 0; x < grid.getSize(); x++) {
                 if (grid.getValue(y, x) != null) {
-                    return false; // La grille contient déjà des valeurs
+                    return false;
                 }
             }
         }
-        return true; // La grille est complètement vide
+        return true;
     }
 
-    private void generateSolvedGrid(Grid grid) {
-        BackTrackingSolver backtrackingSolver = new BackTrackingSolver(new Logger());
+    /**
+     * Génère une grille complètement remplie et valide en utilisant le backtracking.
+     */
+    private void generateSolvedGrid(Grid<E> grid) {
+        BackTrackingSolver<E> backtrackingSolver = new BackTrackingSolver<>(new Logger());
         backtrackingSolver.solve(grid, false);
     }
 
-    private void makeGridPlayable(Grid grid, Difficulte difficulte) {
+    /**
+     * Supprime des cellules tout en garantissant une solution unique.
+     */
+    private void makeGridPlayable(Grid<E> grid, Difficulte difficulte) {
         int numberOfCellsToRemove = calculateCellsToRemove(difficulte);
-        List<Cell> cellsToRemove = getShuffledCells(grid);
+        List<Cell<E>> cellsToRemove = getShuffledCells(grid);
 
         int removedCells = 0;
-        for (Cell cell : cellsToRemove) {
+        for (Cell<E> cell : cellsToRemove) {
             if (grid.getValue(cell.getY(), cell.getX()) != null) {
-                Object removedValue = grid.getValue(cell.getY(), cell.getX());
+                E removedValue = grid.getValue(cell.getY(), cell.getX());
                 grid.setValue(cell.getY(), cell.getX(), null);
 
                 if (!hasUniqueSolution(grid)) {
@@ -63,13 +71,19 @@ public class GenerateFromComputer extends Generator {
         }
     }
 
-    private boolean hasUniqueSolution(Grid grid) {
-        BackTrackingSolver solver = new BackTrackingSolver(new Logger());
-        return solver.solve(grid, true);
+    /**
+     * Vérifie si la grille possède une solution unique après suppression des valeurs.
+     */
+    private boolean hasUniqueSolution(Grid<E> grid) {
+        BackTrackingSolver<E> solver = new BackTrackingSolver<>(new Logger());
+        return solver.countSolutions(grid, 0, 2) == 1;
     }
 
-    private List<Cell> getShuffledCells(Grid grid) {
-        List<Cell> cells = new ArrayList<>();
+    /**
+     * Récupère et mélange les cellules de la grille pour varier les suppressions.
+     */
+    private List<Cell<E>> getShuffledCells(Grid<E> grid) {
+        List<Cell<E>> cells = new ArrayList<>();
         for (int y = 0; y < grid.getSize(); y++) {
             for (int x = 0; x < grid.getSize(); x++) {
                 cells.add(grid.getCell(y, x));
@@ -79,6 +93,9 @@ public class GenerateFromComputer extends Generator {
         return cells;
     }
 
+    /**
+     * Définit le nombre de cellules à supprimer en fonction de la difficulté.
+     */
     private int calculateCellsToRemove(Difficulte difficulte) {
         return switch (difficulte) {
             case FACILE -> 20;

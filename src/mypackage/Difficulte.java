@@ -1,15 +1,15 @@
 package src.mypackage;
 
 public enum Difficulte {
-    EASY,    // Facile
-    MEDIUM,  // Moyen
-    HARD;    // Difficile
+    FACILE,    // Facile
+    MOYEN,  // Moyen
+    DIFFICILE;    // Difficile
 
     public String getDescription() {
         return switch (this) {
-            case EASY -> "Niveau facile";
-            case MEDIUM -> "Niveau moyen";
-            case HARD -> "Niveau difficile";
+            case FACILE -> "Niveau facile";
+            case MOYEN -> "Niveau moyen";
+            case DIFFICILE -> "Niveau difficile";
             default -> "Inconnu";
         };
     }
