@@ -1,13 +1,13 @@
 package src.mypackage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-public class SudokuModulable<E> extends Grid<E> {
+public class ClassicSudokuGrid<E> extends Grid<E> {
+
     private Cell<E>[][] cells; // Grille des cellules
 
-    public SudokuModulable(int size, Set<E> possibleValues) {
+    public ClassicSudokuGrid(int size, Set<E> possibleValues) {
         super(size);
         this.cells = new Cell[size][size];
 
@@ -64,7 +64,6 @@ public class SudokuModulable<E> extends Grid<E> {
         return true; // ✅ Valeur valide
     }
 
-
     @Override
     public E getValue(int y, int x) {
         return cells[y][x].getValue();
@@ -73,7 +72,7 @@ public class SudokuModulable<E> extends Grid<E> {
     @Override
     public void setValue(int y, int x, E value) {
         if (!isValid(y, x, value)) {
-            System.out.println("❌ Valeur invalide : " + value + " coordonées : " + x + ", " + y);
+            System.out.println("❌ Valeur invalide : " + value + " coordonées : " + y + ", " + x);
             return;
         }
         cells[y][x].setValue(value);

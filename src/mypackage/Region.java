@@ -5,11 +5,11 @@ import java.util.List;
 
 
 public class Region<E> {
-    private String id;
+    private int id;
     private List<Cell<E>> cells; // Liste de cellules génériques
 
     // Constructeur
-    public Region(String id) {
+    public Region(int id) {
         this.id = id;
         this.cells = new ArrayList<>();
     }
